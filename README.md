@@ -10,3 +10,33 @@
 ### Places
 * FourSquares
    * https://location.foursquare.com/developer/
+
+---
+# Code snippit
+```
+class User extends Component {
+    // ...
+
+    getUserData = () => axios.get(`${ROOT_URL}/profile/${this.props.activeUserId}`);
+
+    getPermissions = () => axios.get(`${ROOT_URL}/permissions/${this.props.activeUserId}`);
+
+    async componentDidMount() {
+        try {
+            const [userData, userPermissions] = await axios.all([ this.getUserData(), this.getPermissions() ]);
+            this.setState(
+                user: {
+                    data: userData.data,
+                    permissions: userPermissions.data
+                }
+            );
+        }
+        catch (err) {
+            console.log(err.message);
+        }
+        
+    }
+
+    // ...
+}
+```
