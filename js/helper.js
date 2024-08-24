@@ -1,4 +1,14 @@
 const HELPER = {
+   "coords" : {
+      "dmsToDeg": function (coords) {
+         const regex = /(\d+)/g;
+         let match = coords.match(regex);
+
+         return Number(match[0]) + Number(match[1])
+                / 60 + Number(match[2]) / 3600;
+      }
+   },
+   
    "map" : {
       "subscript" : (mapObj, keyValue) => mapObj.get(keyValue),
       "printContent"  : function (mapObj) {
@@ -8,6 +18,6 @@ const HELPER = {
          }
          out += '/';
          console.log(out);
-      },
+      }
    }
 };

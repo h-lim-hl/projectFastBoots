@@ -1,12 +1,3 @@
-const HELPER = {
-  "dmsToDeg": function (coords) {
-    const regex = /(\d+)/g;
-    let match = coords.match(regex);
-
-    return Number(match[0]) + Number(match[1]) / 60 + Number(match[2]) / 3600;
-  }
-};
-
 const SINGAPORE_LATLONG = [1.3521, 103.8198];
 
 const ONE_MAP_SG = 0x01;

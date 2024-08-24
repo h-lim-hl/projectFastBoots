@@ -55,3 +55,10 @@ Data Vis
 
 * Rainviewer
    * https://www.rainviewer.com/api.html
+
+##### Rain Catergories
+* https://en.wikipedia.org/wiki/Rain#Intensity
+  * Light rain — when the precipitation rate is < 2.5 mm (0.098 in) per hour
+  * Moderate rain — when the precipitation rate is between 2.5–7.6 mm (0.098–0.299 in) or 10 mm (0.39 in) per hour[116][117]
+  * Heavy rain — when the precipitation rate is > 7.6 mm (0.30 in) per hour,[116] or between 10 and 50 mm (0.39 and 1.97 in) per hour[117]
+  * Violent rain — when the precipitation rate is > 50 mm (2.0 in) per hour
