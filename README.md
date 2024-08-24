@@ -52,3 +52,6 @@ Leaflet / Mapbox
 Data Vis
 
 + api
+
+* Rainviewer
+   * https://www.rainviewer.com/api.html
