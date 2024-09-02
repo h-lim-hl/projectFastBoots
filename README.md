@@ -1,6 +1,10 @@
 # projectFastBoots
-* Goal is to unify available open data from gov and present these data to the general public so that they can make informed decisions in planning their route around SG
-* additionally the weather information will allow users to see current information around them and Singapore as a whole to make proper outdoor plans.   
+* Goal is to unify available open data from gov and present these data to the general public so that they can make informed decisions in planning activites around SG
+* Additionally the weather information will allow users to see current information around them and Singapore as a whole to make proper plans.
+* The application uses information primarily provided by SG Gov's Open Data initiative and api can be found from Data.gov.sg
+  * Certain information may not be available for free
+    * Lightning risk
+    * Cloud cover
 ## Weather info
 ## Transport info
 *   https://datamall.lta.gov.sg/content/datamall/en/dynamic-data.html#Traffic
@@ -52,3 +56,13 @@ Leaflet / Mapbox
 Data Vis
 
 + api
+
+* Rainviewer
+   * https://www.rainviewer.com/api.html
+
+##### Rain Catergories
+* https://en.wikipedia.org/wiki/Rain#Intensity
+  * Light rain — when the precipitation rate is < 2.5 mm (0.098 in) per hour
+  * Moderate rain — when the precipitation rate is between 2.5–7.6 mm (0.098–0.299 in) or 10 mm (0.39 in) per hour[116][117]
+  * Heavy rain — when the precipitation rate is > 7.6 mm (0.30 in) per hour,[116] or between 10 and 50 mm (0.39 and 1.97 in) per hour[117]
+  * Violent rain — when the precipitation rate is > 50 mm (2.0 in) per hour
