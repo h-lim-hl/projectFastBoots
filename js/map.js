@@ -5,7 +5,7 @@ const OPEN_STREET_MAP = 0x02;
 
 let map = L.map('map').setView(SINGAPORE_LATLONG, 13);
 
-let mapBaseLayer = 1;
+let mapBaseLayer = 2;
 
 if (Boolean(mapBaseLayer & ONE_MAP_SG)) {
   L.tileLayer('https://www.onemap.gov.sg/maps/tiles/Default_HD/{z}/{x}/{y}.png', {
@@ -22,3 +22,13 @@ if (Boolean(mapBaseLayer & OPEN_STREET_MAP)) {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
 }
+
+
+async function addTitleLayer () {
+  console.log(`${RAIN_VIEWER_API.json.host}${RAIN_VIEWER_API.json.radar.nowcast[0].path}/256/{z}/{x}/{y}/1/1_0.png`);
+  L.tileLayer(
+    `${RAIN_VIEWER_API.json.host}${RAIN_VIEWER_API.json.radar.nowcast[0].path}/256/{z}/{x}/{y}/1/1_0.png`
+  ).addTo(map);
+}
+
+setTimeout(addTitleLayer,1000);
