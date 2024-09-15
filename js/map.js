@@ -28,10 +28,10 @@ if (Boolean(mapBaseLayer & OPEN_STREET_MAP)) {
 }
 
 async function addTitleLayer() {
-  console.log(
-    `${RAIN_VIEWER_API.json.host}` + 
-    `${RAIN_VIEWER_API.json.radar.nowcast[0].path}` +
-    `/${RAIN_VIEWER_API.highRes}/{z}/{x}/{y}/1/1_0.png`);
+  // console.log(
+  //   `${RAIN_VIEWER_API.json.host}` + 
+  //   `${RAIN_VIEWER_API.json.radar.nowcast[0].path}` +
+  //   `/${RAIN_VIEWER_API.highRes}/{z}/{x}/{y}/1/1_0.png`);
   L.tileLayer(
     `${RAIN_VIEWER_API.json.host}` + 
     `${RAIN_VIEWER_API.json.radar.nowcast[0].path}` +
@@ -47,4 +47,9 @@ if(RAIN_VIEWER_API.isReady) {
   addTitleLayer();
 }
 
-OPEN_DATA_API.updateApiDataAll();
+OPEN_DATA_API.updateApiDataAll(true);
+//OPEN_DATA_API.updateApiDataFns.get("12H")();
+
+setTimeout(() => {
+  console.log(apiData);
+}, 3000);

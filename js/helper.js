@@ -19,5 +19,7 @@ const HELPER = {
       out += '/';
       console.log(out);
     }
-  }
+  },
+
+  "knotsToMetresPerSecond" : (knots) => knots * 0.5144444444,
 };
