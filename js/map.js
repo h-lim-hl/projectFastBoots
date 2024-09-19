@@ -25,10 +25,12 @@ if (Boolean(mapBaseLayer & OPEN_STREET_MAP)) {
 
 
 async function addTitleLayer () {
+  await getRainViewerApiConfig();
   console.log(`${RAIN_VIEWER_API.json.host}${RAIN_VIEWER_API.json.radar.nowcast[0].path}/256/{z}/{x}/{y}/1/1_0.png`);
   L.tileLayer(
     `${RAIN_VIEWER_API.json.host}${RAIN_VIEWER_API.json.radar.nowcast[0].path}/256/{z}/{x}/{y}/1/1_0.png`
   ).addTo(map);
 }
 
-setTimeout(addTitleLayer,1000);
+//setTimeout(addTitleLayer,1000);
+addTitleLayer();
