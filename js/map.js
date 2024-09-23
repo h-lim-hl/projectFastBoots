@@ -6,7 +6,11 @@ const OPEN_STREET_MAP = 0x02;
 const MAP_MIN_ZOOM = 11;
 const MAP_MAX_ZOON = 19;
 
-let map = L.map('map').setView(SINGAPORE_LATLONG, 13);
+let map = L.map('map',
+   {
+    "minZoom" : MAP_MIN_ZOOM,
+    "maxZoom": MAP_MAX_ZOON
+   }).setView(SINGAPORE_LATLONG, 13);
 
 const BASE_MAPS = {
   "OpenStreetMap" : L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -41,7 +45,9 @@ BASE_MAPS.OpenStreetMap.addTo(map);
 // Map scale
 let mapScale = undefined;
 function addScale(maxWidth, isMetric, isImperial) {
-  mapScale = L.control.scale(maxWidth, isMetric, isImperial);
+  mapScale = L.control.scale({
+    "maxWidth" : maxWidth, "metric" : isMetric, "imperial" : isImperial
+  });
   mapScale.addTo(map);
 }
 
@@ -50,6 +56,8 @@ function removeScale() {
   map.removeControl(mapScale);
   mapScale = undefined;
 }
+
+addScale(100, true, false);
 
 // =========== Rainviewer
 let rainviewerLayer = undefined;
@@ -69,9 +77,7 @@ function addRainviewerLayer() {
   rainviewerLayer = L.tileLayer(
     `${rainviewerApiObj.host}` + 
     `${rainviewerApiObj.radar.nowcast[0].path}` +
-    `/${RAIN_VIEWER_API.highRes}/{z}/{x}/{y}/1/1_0.png`);
-  // Set Opacity
-    rainviewerLayer.opacity = 0.6;
+    `/${RAIN_VIEWER_API.highRes}/{z}/{x}/{y}/1/1_0.png`, {"opacity": 0.4});
   map.addLayer(rainviewerLayer);
 }
 
