@@ -66,3 +66,7 @@ Data Vis
   * Moderate rain — when the precipitation rate is between 2.5–7.6 mm (0.098–0.299 in) or 10 mm (0.39 in) per hour[116][117]
   * Heavy rain — when the precipitation rate is > 7.6 mm (0.30 in) per hour,[116] or between 10 and 50 mm (0.39 and 1.97 in) per hour[117]
   * Violent rain — when the precipitation rate is > 50 mm (2.0 in) per hour
+
+
+## change color w/o sass
+https://medium.com/@Hermanhasawish/how-i-repainted-bootstrap-without-sass-d789f41aa74b

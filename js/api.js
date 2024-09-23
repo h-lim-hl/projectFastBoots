@@ -168,34 +168,7 @@
       await updatefn(updateRegions); 
     }
   },
-};
-
-Object.freeze(OPEN_DATA_API);
-
-const RAIN_VIEWER_API = {
-  "apiJson": `https://api.rainviewer.com/public/weather-maps.json`,
-  "json": undefined,
-  "highRes": 512,
-  "lowRes": 256,
-  "isReady" : false,
-};
-async function getRainViewerApiConfig() {
-  axios.get(RAIN_VIEWER_API.apiJson)
-    .then((response) => {
-      console.log(`getRainViewerApiConfig(): Success`);
-      console.log(response.data);
-      RAIN_VIEWER_API.json = response.data;
-      
-      console.log("rainviewerReady");
-      document.dispatchEvent(rainviewerApiEvent);
-      RAIN_VIEWER_API.isReady = true;
-    })
-    .catch((err) => {
-      console.error(`getRainViewerApiConfig(): ${err}`);
-    });
-}
-const rainviewerApiEvent = new CustomEvent(`RainviewerApiReady`);
-getRainViewerApiConfig();
+}; Object.freeze(OPEN_DATA_API);
 
 const apiData = {
   "stations" : new Map(),
@@ -256,9 +229,7 @@ const apiData = {
   "isRainviewerReady" : false,
 
   "last" : 0
-};
-
-Object.seal(apiData);
+}; Object.seal(apiData);
 
 function updateStations(stations) {
   for(let station of stations) {
@@ -300,6 +271,28 @@ function updateNeighbourhoods(regions) {
   }
 }
 
+const ENUM_RAINFALL_CATERGORY = {
+  "none" : 0,
+  "light" : 1,
+  "moderate" : 2,
+  "heavy" : 3,
+  "violent" : 4
+};
+Object.freeze(ENUM_RAINFALL_CATERGORY);
+
+// Rain Catergories
+// https://en.wikipedia.org/wiki/Rain#Intensity
+function getRainfallCatergory(MmPer5min) {
+  const rainRate = MmPer5min * 12.0;
+  let rainLevel = 0;
+  if(rainRate < 2.5) rainLevel += 1;
+  if(rainRate < 10.0) rainLevel += 1;
+  if(rainRate < 50.0) rainLevel += 1;
+  if(50.0 <= rainRate) rainLevel += 1;
+  return rainLevel;
+}
+
+
 /*
 function assigningValues () {
   return;
@@ -313,7 +306,7 @@ function assigningValues () {
 
 //getApiData();
 
-
+/*
 //  =================== Local Database Logic ==========================
 let db;
 const dbRequest = indexedDB.open("MyTestDatabase");
@@ -325,3 +318,4 @@ dbRequest.onsuccess = (event) => {
   db = event.target.result;
   console.log(`DB request Success!`);
 }
+*/

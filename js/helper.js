@@ -22,4 +22,31 @@ const HELPER = {
   },
 
   "knotsToMetresPerSecond" : (knots) => knots * 0.5144444444,
+
+  // Levensthein distance
+  "restrictedEditedDist" : (stringA, stringB) => {
+    let matrix = new Array(stringA.length + 1).fill(0)
+    .map(() => new Array(stringB.length+1).fill(0));
+
+    for(let i = 0; i <= stringA.length; ++i) {
+      matrix[i][0] = i;
+    }
+    for(let i = 0; i <= stringB.length; ++i) {
+      matrix[0][i];
+    }
+
+    for(let i = 1; i <= stringA.length; ++i) {
+      for(let j = 1; j <= stringB.length; ++j) {
+        if(stringA[i-1] === stringB[j-1])
+          matrix[i][j] = matrix[i-1][j-1];
+        else
+          matrix[i][j] = 1 + Math.min(
+            matrix[i-1][j],
+            matrix[i][j-1],
+            matrix[i-1][j-1]);
+      }
+    }
+
+    return matrix[stringA.length][stringB.length];
+  },
 };

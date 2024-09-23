@@ -8,45 +8,84 @@ const MAP_MAX_ZOON = 19;
 
 let map = L.map('map').setView(SINGAPORE_LATLONG, 13);
 
-let mapBaseLayer = 2;
+const BASE_MAPS = {
+  "OpenStreetMap" : L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      detectRetina: true,
+      maxZoom: MAP_MAX_ZOON,
+      minZoom: MAP_MIN_ZOOM,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }),
+  "OpenStreetMap.HOT" : L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+    {
+      detectRetina: true,
+      maxZoom: MAP_MAX_ZOON,
+      minZoom: MAP_MIN_ZOOM,
+      attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'
+    }),
+  "OneMapSG" : L.tileLayer('https://www.onemap.gov.sg/maps/tiles/Default_HD/{z}/{x}/{y}.png',
+    {
+      detectRetina: true,
+      maxZoom: MAP_MAX_ZOON,
+      minZoom: MAP_MIN_ZOOM,
+      /** DO NOT REMOVE the OneMap attribution below **/
+      attribution: '<img src="https://www.onemap.gov.sg/web-assets/images/logo/om_logo.png" style="height:20px;width:20px;"/>&nbsp;<a href="https://www.onemap.gov.sg/" target="_blank" rel="noopener noreferrer">OneMap</a>&nbsp;&copy;&nbsp;contributors&nbsp;&#124;&nbsp;<a href="https://www.sla.gov.sg/" target="_blank" rel="noopener noreferrer">Singapore Land Authority</a>'
+    })
+};
+// Add baselayer control
+let layerControl = L.control.layers(BASE_MAPS).addTo(map);
 
-if (Boolean(mapBaseLayer & ONE_MAP_SG)) {
-  L.tileLayer('https://www.onemap.gov.sg/maps/tiles/Default_HD/{z}/{x}/{y}.png', {
-    detectRetina: true,
-    maxZoom: MAP_MAX_ZOON,
-    minZoom: MAP_MIN_ZOOM,
-    /** DO NOT REMOVE the OneMap attribution below **/
-    attribution: '<img src="https://www.onemap.gov.sg/web-assets/images/logo/om_logo.png" style="height:20px;width:20px;"/>&nbsp;<a href="https://www.onemap.gov.sg/" target="_blank" rel="noopener noreferrer">OneMap</a>&nbsp;&copy;&nbsp;contributors&nbsp;&#124;&nbsp;<a href="https://www.sla.gov.sg/" target="_blank" rel="noopener noreferrer">Singapore Land Authority</a>'
-  }).addTo(map);
-}
-if (Boolean(mapBaseLayer & OPEN_STREET_MAP)) {
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: MAP_MAX_ZOON,
-    minZoom: MAP_MIN_ZOOM,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
+// Set Default Baselayer
+BASE_MAPS.OpenStreetMap.addTo(map);
+
+// Map scale
+let mapScale = undefined;
+function addScale(maxWidth, isMetric, isImperial) {
+  mapScale = L.control.scale(maxWidth, isMetric, isImperial);
+  mapScale.addTo(map);
 }
 
-async function addTitleLayer() {
-  // console.log(
-  //   `${RAIN_VIEWER_API.json.host}` + 
-  //   `${RAIN_VIEWER_API.json.radar.nowcast[0].path}` +
-  //   `/${RAIN_VIEWER_API.highRes}/{z}/{x}/{y}/1/1_0.png`);
-  L.tileLayer(
-    `${RAIN_VIEWER_API.json.host}` + 
-    `${RAIN_VIEWER_API.json.radar.nowcast[0].path}` +
-    `/${RAIN_VIEWER_API.highRes}/{z}/{x}/{y}/1/1_0.png`).addTo(map);
+function removeScale() {
+  if(mapScale == undefined) return;
+  map.removeControl(mapScale);
+  mapScale = undefined;
 }
 
-document.addEventListener("RainviewerApiReady", () => {
-  addTitleLayer();
+// =========== Rainviewer
+let rainviewerLayer = undefined;
+
+function removeRainviewerLayer() {
+  if(rainviewerLayer === undefined) return;
+  map.removeLayer(rainviewerLayer);
+  rainviewerLayer = undefined;
+}
+
+function addRainviewerLayer() {
+  if(rainviewerApiObj === undefined) {
+    console.error(`rainviewerApiObj is undefined!`);
+    return;
+  }
+
+  rainviewerLayer = L.tileLayer(
+    `${rainviewerApiObj.host}` + 
+    `${rainviewerApiObj.radar.nowcast[0].path}` +
+    `/${RAIN_VIEWER_API.highRes}/{z}/{x}/{y}/1/1_0.png`);
+  // Set Opacity
+    rainviewerLayer.opacity = 0.6;
+  map.addLayer(rainviewerLayer);
+}
+
+document.addEventListener("rainviewerApiUpdated", () => {
+  removeRainviewerLayer();
+  addRainviewerLayer();
   console.log("displayRainviewer");
 });
 
-if(RAIN_VIEWER_API.isReady) {
-  addTitleLayer();
-}
+// if(RAIN_VIEWER_API.isReady) {
+//   addRainviewerLayer();
+// }
 
+// ====== Open Data
 OPEN_DATA_API.updateApiDataAll(true);
 //OPEN_DATA_API.updateApiDataFns.get("12H")();
 
