@@ -25,6 +25,8 @@
   --rainviewer-ub-md : #ffee00ff;
   --rainviewer-ub-hv : #ff7700ff;
   --rainviewer-ub-hl : #ee0000ff;
+  --rainviewer-ub-end : #aa00aaff;
+
 
   /* Titan Scheme  */
   --rainviewer-tt-start: #005a00ff;
@@ -33,7 +35,7 @@
   --rainviewer-tt-md: #c06487ff;
   --rainviewer-tt-hv: #fac431ff;
   --rainviewer-tt-hl: #fe9a58ff;
-  --rainviewer-tt-end: #;
+  --rainviewer-tt-end: #d3d3d3ff;
 
   /* The Weather Channel Scheme */
   --rainviewer-wc-start : #00000000;
@@ -41,7 +43,7 @@
   --rainviewer-wc-lt : #11651aff;
   --rainviewer-wc-md : #ffee07ff;
   --rainviewer-wc-hv : #f38b08ff;
-  --rainviewer-wc-end : #;
+  --rainviewer-wc-end : #b80c08ff;
 
   /* Meteored Scheme */
   --rainviewer-mt-start: #00000000;
@@ -49,42 +51,34 @@
   --rainviewer-mt-lt: #0000f3ff;
   --rainviewer-mt-md: #32c23dff;
   --rainviewer-mt-hv: #ffff50ff;
-  --rainviewer-mt-hl: #;
+  --rainviewer-mt-hl: #df5e0bff;
+  --rainviewer-mt-end: #502a68ff;
 
   /*NEXRAD Level III Scheme */
-  --rainviewer-nr-start: #;
+  --rainviewer-nr-start: #04e9e7ff;
   --rainviewer-nr-ov: #009cf7ff;
   --rainviewer-nr-lt: #00ff00ff;
   --rainviewer-nr-md: #087305ff;
   --rainviewer-nr-hv: #ecce00ff;
   --rainviewer-nr-hl: #ff0000ff;
-  --rainviewer-nr-end: #;
+  --rainviewer-nr-end: #ffffffff;
 
   /* Rainbow @ Selex SI Scheme */
-  --rainviewer-rs-start : #;
+  --rainviewer-rs-start : #00000000;
   --rainviewer-rs-ov : #009f9fff;
   --rainviewer-rs-lt : #00d319ff;
   --rainviewer-rs-md : #fffd1bff;
   --rainviewer-rs-hv : #ffab00ff;
   --rainviewer-rs-hl : #f01002ff;
-  --rainviewer-rs-end : #;
+  --rainviewer-rs-end : #ffaaffff;
 
+  /* Dark Sky Scheme */
+  --rainviewer-ds-start : #005eb611;
+  --rainviewer-ds-ov : #005eb633;
+  --rainviewer-ds-lt : #005eb699;
+  --rainviewer-ds-md : #8e4b9bff;
+  --rainviewer-ds-hv : #ffb76eff;
+  --rainviewer-ds-hl : #fffd05ff;
+  --rainviewer-ds-end : #fffd05ff;
 
-}
-
-/* Dark Sky Scheme */
-.rainviewer-ds-ov {
-  background-color: #005eb633;
-}
-.rainviewer-ds-lt {
-  background-color: #005eb699;
-}
-.rainviewer-ds-md {
-  background-color: #8e4b9bff;
-}
-.rainviewer-ds-hv {
-  background-color: #ffb76eff;
-}
-.rainviewer-ds-hl {
-  background-color: #fffd05ff;
 }

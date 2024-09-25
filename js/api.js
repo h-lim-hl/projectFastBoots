@@ -281,13 +281,13 @@ Object.freeze(ENUM_RAINFALL_CATERGORY);
 // Rain Catergories
 // https://en.wikipedia.org/wiki/Rain#Intensity
 function getRainfallCatergory(MmPer5min) {
-  const rainRate = MmPer5min * 12.0;
-  let rainLevel = 0;
-  if(rainRate < 2.5) rainLevel += 1;
-  if(rainRate < 10.0) rainLevel += 1;
-  if(rainRate < 50.0) rainLevel += 1;
-  if(50.0 <= rainRate) rainLevel += 1;
-  return rainLevel;
+  if(MmPer5min === 0) return ENUM_RAINFALL_CATERGORY.none;
+  
+  const rainRate = MmPer5min * 12.0; // Get mm/hr
+  if(rainRate < 2.5) return ENUM_RAINFALL_CATERGORY.light;
+  if(rainRate < 10.0) return ENUM_RAINFALL_CATERGORY.moderate;
+  if(rainRate < 50.0) return ENUM_RAINFALL_CATERGORY.heavy;
+  return ENUM_RAINFALL_CATERGORY.violent;
 }
 
 
