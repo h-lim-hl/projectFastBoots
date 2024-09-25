@@ -1,0 +1,90 @@
+:root {
+  /* Black and White Scheme */
+  --rainviewer-bw-start : #202020ff;
+  --rainviewer-bw-ov : #2a2a2aff;
+  --rainviewer-bw-lt : #343434ff;
+  --rainviewer-bw-md : #3e3e3eff;
+  --rainviewer-bw-hv : #484848ff;
+  --rainviewer-bw-hl : #525252ff;
+  --rainviewer-bw-end : #7f7f7fff;
+
+
+  /* Original Scheme */
+  --rainviewer-or-start : #00000000;
+  --rainviewer-or-ov : #dfdfdfff;
+  --rainviewer-or-lt : #58ff42ff;
+  --rainviewer-or-md : #4793f9ff;
+  --rainviewer-or-hv : #6153c1ff;
+  --rainviewer-or-hl : #ff3f35ff;
+  --rainviewer-or-end : #ffffffff;
+
+  /* Universal Blue Scheme */
+  --rainviewer-ub-start : #92887188;
+  --rainviewer-ub-ov : #88ddeeff;
+  --rainviewer-ub-lt : #0077aaff;
+  --rainviewer-ub-md : #ffee00ff;
+  --rainviewer-ub-hv : #ff7700ff;
+  --rainviewer-ub-hl : #ee0000ff;
+
+  /* Titan Scheme  */
+  --rainviewer-tt-start: #005a00ff;
+  --rainviewer-tt-ov: #087fdbff;
+  --rainviewer-tt-lt: #6e0dc6ff;
+  --rainviewer-tt-md: #c06487ff;
+  --rainviewer-tt-hv: #fac431ff;
+  --rainviewer-tt-hl: #fe9a58ff;
+  --rainviewer-tt-end: #;
+
+  /* The Weather Channel Scheme */
+  --rainviewer-wc-start : #00000000;
+  --rainviewer-wc-ov : #01b714ff;
+  --rainviewer-wc-lt : #11651aff;
+  --rainviewer-wc-md : #ffee07ff;
+  --rainviewer-wc-hv : #f38b08ff;
+  --rainviewer-wc-end : #;
+
+  /* Meteored Scheme */
+  --rainviewer-mt-start: #00000000;
+  --rainviewer-mt-ov: #3ffefcff;
+  --rainviewer-mt-lt: #0000f3ff;
+  --rainviewer-mt-md: #32c23dff;
+  --rainviewer-mt-hv: #ffff50ff;
+  --rainviewer-mt-hl: #;
+
+  /*NEXRAD Level III Scheme */
+  --rainviewer-nr-start: #;
+  --rainviewer-nr-ov: #009cf7ff;
+  --rainviewer-nr-lt: #00ff00ff;
+  --rainviewer-nr-md: #087305ff;
+  --rainviewer-nr-hv: #ecce00ff;
+  --rainviewer-nr-hl: #ff0000ff;
+  --rainviewer-nr-end: #;
+
+  /* Rainbow @ Selex SI Scheme */
+  --rainviewer-rs-start : #;
+  --rainviewer-rs-ov : #009f9fff;
+  --rainviewer-rs-lt : #00d319ff;
+  --rainviewer-rs-md : #fffd1bff;
+  --rainviewer-rs-hv : #ffab00ff;
+  --rainviewer-rs-hl : #f01002ff;
+  --rainviewer-rs-end : #;
+
+
+}
+
+/* Dark Sky Scheme */
+.rainviewer-ds-ov {
+  background-color: #005eb633;
+}
+.rainviewer-ds-lt {
+  background-color: #005eb699;
+}
+.rainviewer-ds-md {
+  background-color: #8e4b9bff;
+}
+.rainviewer-ds-hv {
+  background-color: #ffb76eff;
+}
+.rainviewer-ds-hl {
+  background-color: #fffd05ff;
+}
