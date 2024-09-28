@@ -71,7 +71,7 @@
   --rainviewer-rs-hl : #f01002ff;
   --rainviewer-rs-end : #ffaaffff;
 
-  /* Dark Sky*/
+  /* Dark Sky */
   --rainviewer-ds-start: #005eb611;
   --rainviewer-ds-ov: #005eb639;
   --rainviewer-ds-lt: #005eb699;
@@ -79,23 +79,4 @@
   --rainviewer-ds-hv: #ffb76eff;
   --rainviewer-ds-hl: #fffd05ff;
   --rainviewer-ds-end: #fffd05ff;
-
-
-}
-
-/* Dark Sky Scheme */
-.rainviewer-ds-ov {
-  background-color: #005eb633;
-}
-.rainviewer-ds-lt {
-  background-color: #005eb699;
-}
-.rainviewer-ds-md {
-  background-color: #8e4b9bff;
-}
-.rainviewer-ds-hv {
-  background-color: #ffb76eff;
-}
-.rainviewer-ds-hl {
-  background-color: #fffd05ff;
 }
