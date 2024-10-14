@@ -222,12 +222,12 @@ const OPEN_DATA_API = {
             setInterval(getRainViewerApiConfig, timeout))
         };
         const timeNow = new Date().getTime();
-        setTimeout(updateFunc, timeNow % 60000, "1M", 60000);
-        setTimeout(updateFunc, timeNow % 300000, "5M", 300000);
-        setTimeout(updateRainviewer, timeNow % 600000, "rainviewer", 600000);
-        setTimeout(updateFunc, timeNow % 1800000, "30M", 1800000);
-        setTimeout(updateFunc, timeNow % 3600000, "1H", 3600000);
-        setTimeout(updateFunc, timeNow % 3600000, "12H", 43200000);
+        setTimeout(updateFunc, 60000 - timeNow % 60000, "1M", 60000);
+        setTimeout(updateFunc, 300000 - timeNow % 300000, "5M", 300000);
+        setTimeout(updateRainviewer, 600000 - timeNow % 600000, "rainviewer", 600000);
+        setTimeout(updateFunc, 1800000 - timeNow % 1800000, "30M", 1800000);
+        setTimeout(updateFunc, 3600000 - timeNow % 3600000, "1H", 3600000);
+        setTimeout(updateFunc, 43200000 - timeNow % 43200000, "12H", 43200000);
       });
   },
 
