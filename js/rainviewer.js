@@ -6,6 +6,9 @@
 let rainviewerApiObj = undefined;
 let rainviewerError = undefined;
 
+const rainviewerApiUpdated = new CustomEvent(`rainviewerApiUpdated`);
+const rainviewerApiError = new CustomEvent(`RainviewerApiError`);
+
 const RAIN_VIEWER_API = {
   "apiJson": `https://api.rainviewer.com/public/weather-maps.json`,
   "highRes": 512,
@@ -13,6 +16,18 @@ const RAIN_VIEWER_API = {
   "isReady" : () => { return rainviewerApiObj === undefined ? false : true; },
   "getDate" : (timestamp) => { return new Date(timestamp * 1000); }
 }; Object.freeze(RAIN_VIEWER_API);
+
+const rainviewerOptions = {
+  "color" : 1,
+  "opacity" : 0.4
+};
+
+function getRainlayer() { 
+  return `${rainviewerApiObj.host}` + 
+         `${rainviewerApiObj.radar.nowcast[0].path}/` +
+         `${RAIN_VIEWER_API.highRes}/{z}/{x}/{y}/` + 
+         `${rainviewerOptions.color}/1_0.png`;
+}
 
 // updates every 10mins
 async function getRainViewerApiConfig() {
@@ -31,8 +46,7 @@ async function getRainViewerApiConfig() {
     });
 }
 
-const rainviewerApiUpdated = new CustomEvent(`rainviewerApiUpdated`);
-const rainviewerApiError = new CustomEvent(`RainviewerApiError`);
+
 
 getRainViewerApiConfig();
 

@@ -75,9 +75,7 @@ function addRainviewerLayer() {
   }
 
   rainviewerLayer = L.tileLayer(
-    `${rainviewerApiObj.host}` + 
-    `${rainviewerApiObj.radar.nowcast[0].path}` +
-    `/${RAIN_VIEWER_API.highRes}/{z}/{x}/{y}/1/1_0.png`, {"opacity": 0.4});
+    getRainlayer(), {"opacity" : rainviewerOptions.opacity});
   map.addLayer(rainviewerLayer);
 }
 
@@ -95,6 +93,6 @@ document.addEventListener("rainviewerApiUpdated", () => {
 OPEN_DATA_API.updateApiDataAll(true);
 //OPEN_DATA_API.updateApiDataFns.get("12H")();
 
-setTimeout(() => {
-  console.log(apiData);
-}, 3000);
+// setTimeout(() => {
+//   console.log(apiData);
+// }, 3000);
