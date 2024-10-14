@@ -27,7 +27,6 @@
   --rainviewer-ub-hl : #ee0000ff;
   --rainviewer-ub-end : #aa00aaff;
 
-
   /* Titan Scheme  */
   --rainviewer-tt-start: #005a00ff;
   --rainviewer-tt-ov: #087fdbff;
@@ -72,13 +71,12 @@
   --rainviewer-rs-hl : #f01002ff;
   --rainviewer-rs-end : #ffaaffff;
 
-  /* Dark Sky Scheme */
-  --rainviewer-ds-start : #005eb611;
-  --rainviewer-ds-ov : #005eb633;
-  --rainviewer-ds-lt : #005eb699;
-  --rainviewer-ds-md : #8e4b9bff;
-  --rainviewer-ds-hv : #ffb76eff;
-  --rainviewer-ds-hl : #fffd05ff;
-  --rainviewer-ds-end : #fffd05ff;
-
+  /* Dark Sky */
+  --rainviewer-ds-start: #005eb611;
+  --rainviewer-ds-ov: #005eb639;
+  --rainviewer-ds-lt: #005eb699;
+  --rainviewer-ds-md: #a44c92ff;
+  --rainviewer-ds-hv: #ffb76eff;
+  --rainviewer-ds-hl: #fffd05ff;
+  --rainviewer-ds-end: #fffd05ff;
 }
