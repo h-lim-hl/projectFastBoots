@@ -80,3 +80,102 @@
   --rainviewer-ds-hl: #fffd05ff;
   --rainviewer-ds-end: #fffd05ff;
 }
+
+.rainviewerBw {
+  background-image: linear-gradient(to bottom,
+   var(--rainviewer-bw-start),
+   var(--rainviewer-bw-ov),
+   var(--rainviewer-bw-lt),
+   var(--rainviewer-bw-md),
+   var(--rainviewer-bw-hv),
+   var(--rainviewer-bw-hl),
+   var(--rainviewer-bw-end))
+}
+
+.rainviewerOr {
+  background-image: linear-gradient(to bottom,
+   var(--rainviewer-or-start),
+   var(--rainviewer-or-ov),
+   var(--rainviewer-or-lt),
+   var(--rainviewer-or-md),
+   var(--rainviewer-or-hv),
+   var(--rainviewer-or-hl),
+   var(--rainviewer-or-end))
+}
+
+.rainviewerUb {
+  background-image: linear-gradient(to bottom,
+   var(--rainviewer-ub-start),
+   var(--rainviewer-ub-ov),
+   var(--rainviewer-ub-lt),
+   var(--rainviewer-ub-md),
+   var(--rainviewer-ub-hv),
+   var(--rainviewer-ub-hl),
+   var(--rainviewer-ub-end))
+}
+
+.rainviewerTt {
+  background-image: linear-gradient(to bottom,
+   var(--rainviewer-tt-start),
+   var(--rainviewer-tt-ov),
+   var(--rainviewer-tt-lt),
+   var(--rainviewer-tt-md),
+   var(--rainviewer-tt-hv),
+   var(--rainviewer-tt-hl),
+   var(--rainviewer-tt-end))
+}
+
+.rainviewerWc {
+  background-image: linear-gradient(to bottom,
+   var(--rainviewer-wc-start),
+   var(--rainviewer-wc-ov),
+   var(--rainviewer-wc-lt),
+   var(--rainviewer-wc-md),
+   var(--rainviewer-wc-hv),
+   var(--rainviewer-wc-hl),
+   var(--rainviewer-wc-end))
+}
+
+.rainviewerMt {
+  background-image: linear-gradient(to bottom,
+   var(--rainviewer-mt-start),
+   var(--rainviewer-mt-ov),
+   var(--rainviewer-mt-lt),
+   var(--rainviewer-mt-md),
+   var(--rainviewer-mt-hv),
+   var(--rainviewer-mt-hl),
+   var(--rainviewer-mt-end))
+}
+
+.rainviewerNr {
+  background-image: linear-gradient(to bottom,
+   var(--rainviewer-nr-start),
+   var(--rainviewer-nr-ov),
+   var(--rainviewer-nr-lt),
+   var(--rainviewer-nr-md),
+   var(--rainviewer-nr-hv),
+   var(--rainviewer-nr-hl),
+   var(--rainviewer-nr-end))
+}
+
+.rainviewerRs {
+  background-image: linear-gradient(to bottom,
+   var(--rainviewer-rs-start),
+   var(--rainviewer-rs-ov),
+   var(--rainviewer-rs-lt),
+   var(--rainviewer-rs-md),
+   var(--rainviewer-rs-hv),
+   var(--rainviewer-rs-hl),
+   var(--rainviewer-rs-end))
+}
+
+.rainviewerDs {
+  background-image: linear-gradient(to bottom,
+   var(--rainviewer-ds-start),
+   var(--rainviewer-ds-ov),
+   var(--rainviewer-ds-lt),
+   var(--rainviewer-ds-md),
+   var(--rainviewer-ds-hv),
+   var(--rainviewer-ds-hl),
+   var(--rainviewer-ds-end))
+}
