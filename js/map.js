@@ -3,13 +3,14 @@ const SINGAPORE_LATLONG = [1.3521, 103.8198];
 const ONE_MAP_SG = 0x01;
 const OPEN_STREET_MAP = 0x02;
 
-const MAP_MIN_ZOOM = 11;
-const MAP_MAX_ZOON = 19;
+const MAP_MIN_ZOOM = 10;
+const MAP_MAX_ZOON = 20;
 
 let map = L.map('map',
    {
-    "minZoom" : MAP_MIN_ZOOM,
-    "maxZoom": MAP_MAX_ZOON
+    "minZoom" : MAP_MIN_ZOOM + 1,
+    "maxZoom": MAP_MAX_ZOON - 1,
+    "zoomControl" : false
    }).setView(SINGAPORE_LATLONG, 13);
 
 const BASE_MAPS = {
@@ -42,11 +43,12 @@ let layerControl = L.control.layers(BASE_MAPS).addTo(map);
 // Set Default Baselayer
 BASE_MAPS.OpenStreetMap.addTo(map);
 
-// Map scale
+// Map Scale
 let mapScale = undefined;
-function addScale(maxWidth, isMetric, isImperial) {
+function addScale(maxWidth, isMetric) {
   mapScale = L.control.scale({
-    "maxWidth" : maxWidth, "metric" : isMetric, "imperial" : isImperial
+    "maxWidth" : maxWidth, "metric" : isMetric, "imperial" : !isMetric,
+    "position" : "bottomright"
   });
   mapScale.addTo(map);
 }
@@ -57,10 +59,17 @@ function removeScale() {
   mapScale = undefined;
 }
 
-addScale(100, true, false);
+addScale(100, true);
+
+// Map Zoom Controls
+L.control.zoom({
+  position: 'bottomright' // Set desired position
+}).addTo(map);
 
 // =========== Rainviewer
 let rainviewerLayer = undefined;
+let rainviewerControl = undefined;
+let rainviewerColorScheme = Object.values(colorSchemeToCssClass)[1];
 
 function removeRainviewerLayer() {
   if(rainviewerLayer === undefined) return;
@@ -76,7 +85,16 @@ function addRainviewerLayer() {
 
   rainviewerLayer = L.tileLayer(
     getRainlayer(), {"opacity" : rainviewerOptions.opacity});
+  
+  rainviewerControl = L.control({position : 'topleft'});
+  rainviewerControl.onAdd = () => {
+    let legend = L.DomUtil.create('div');
+    legend.innerHTML += getRainviewerLegend(rainviewerColorScheme);
+    return legend;
+  };
+  
   map.addLayer(rainviewerLayer);
+  rainviewerControl.addTo(map);
 }
 
 document.addEventListener("rainviewerApiUpdated", () => {
@@ -96,3 +114,5 @@ OPEN_DATA_API.updateApiDataAll(true);
 // setTimeout(() => {
 //   console.log(apiData);
 // }, 3000);
+
+

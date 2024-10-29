@@ -5,8 +5,9 @@
   --rainviewer-bw-lt : #343434ff;
   --rainviewer-bw-md : #3e3e3eff;
   --rainviewer-bw-hv : #484848ff;
-  --rainviewer-bw-hl : #525252ff;
-  --rainviewer-bw-end : #7f7f7fff;
+  --rainviewer-bw-vh : #525252ff;
+  --rainviewer-bw-ew : #5c5c5cff;
+  --rainviewer-bw-end : #7a7a7aff;
 
 
   /* Original Scheme */
@@ -15,8 +16,9 @@
   --rainviewer-or-lt : #58ff42ff;
   --rainviewer-or-md : #4793f9ff;
   --rainviewer-or-hv : #6153c1ff;
-  --rainviewer-or-hl : #ff3f35ff;
-  --rainviewer-or-end : #ffffffff;
+  --rainviewer-or-vh : #ff3f35ff;
+  --rainviewer-or-ew : #ffeb0aff;
+  --rainviewer-or-end : #a84c06ff;
 
   /* Universal Blue Scheme */
   --rainviewer-ub-start : #92887188;
@@ -24,8 +26,9 @@
   --rainviewer-ub-lt : #0077aaff;
   --rainviewer-ub-md : #ffee00ff;
   --rainviewer-ub-hv : #ff7700ff;
-  --rainviewer-ub-hl : #ee0000ff;
-  --rainviewer-ub-end : #aa00aaff;
+  --rainviewer-ub-vh : #ee0000ff;
+  --rainviewer-ub-ew : #ffaaffff;
+  --rainviewer-ub-end : #ff44ffff;
 
   /* Titan Scheme  */
   --rainviewer-tt-start: #005a00ff;
@@ -33,7 +36,8 @@
   --rainviewer-tt-lt: #6e0dc6ff;
   --rainviewer-tt-md: #c06487ff;
   --rainviewer-tt-hv: #fac431ff;
-  --rainviewer-tt-hl: #fe9a58ff;
+  --rainviewer-tt-vh: #fe9a58ff;
+  --rainviewer-tt-ew: #fd341cff;
   --rainviewer-tt-end: #d3d3d3ff;
 
   /* The Weather Channel Scheme */
@@ -42,6 +46,8 @@
   --rainviewer-wc-lt : #11651aff;
   --rainviewer-wc-md : #ffee07ff;
   --rainviewer-wc-hv : #f38b08ff;
+  --rainviewer-wc-vh : #ea5e09ff;
+  --rainviewer-wc-ew : #d3100cff;
   --rainviewer-wc-end : #b80c08ff;
 
   /* Meteored Scheme */
@@ -50,8 +56,9 @@
   --rainviewer-mt-lt: #0000f3ff;
   --rainviewer-mt-md: #32c23dff;
   --rainviewer-mt-hv: #ffff50ff;
-  --rainviewer-mt-hl: #df5e0bff;
-  --rainviewer-mt-end: #502a68ff;
+  --rainviewer-mt-vh: #df5e0bff;
+  --rainviewer-mt-ew: #e90000ff;
+  --rainviewer-mt-end: #ef5beeff;
 
   /*NEXRAD Level III Scheme */
   --rainviewer-nr-start: #04e9e7ff;
@@ -59,8 +66,9 @@
   --rainviewer-nr-lt: #00ff00ff;
   --rainviewer-nr-md: #087305ff;
   --rainviewer-nr-hv: #ecce00ff;
-  --rainviewer-nr-hl: #ff0000ff;
-  --rainviewer-nr-end: #ffffffff;
+  --rainviewer-nr-vh: #ff0000ff;
+  --rainviewer-nr-ew: #bd0000ff;
+  --rainviewer-nr-end: #9c52c6ff;
 
   /* Rainbow @ Selex SI Scheme */
   --rainviewer-rs-start : #00000000;
@@ -68,8 +76,9 @@
   --rainviewer-rs-lt : #00d319ff;
   --rainviewer-rs-md : #fffd1bff;
   --rainviewer-rs-hv : #ffab00ff;
-  --rainviewer-rs-hl : #f01002ff;
-  --rainviewer-rs-end : #ffaaffff;
+  --rainviewer-rs-vh : #f01002ff;
+  --rainviewer-rs-ew : #e400b1ff;
+  --rainviewer-rs-end : #ff66ffff;
 
   /* Dark Sky */
   --rainviewer-ds-start: #005eb611;
@@ -77,7 +86,8 @@
   --rainviewer-ds-lt: #005eb699;
   --rainviewer-ds-md: #a44c92ff;
   --rainviewer-ds-hv: #ffb76eff;
-  --rainviewer-ds-hl: #fffd05ff;
+  --rainviewer-ds-vh: #fffd05ff;
+  --rainviewer-ds-ew: #fffd05ff;
   --rainviewer-ds-end: #fffd05ff;
 }
 
@@ -88,7 +98,8 @@
    var(--rainviewer-bw-lt),
    var(--rainviewer-bw-md),
    var(--rainviewer-bw-hv),
-   var(--rainviewer-bw-hl),
+   var(--rainviewer-bw-vh),
+   var(--rainviewer-bw-ew),
    var(--rainviewer-bw-end))
 }
 
@@ -99,7 +110,8 @@
    var(--rainviewer-or-lt),
    var(--rainviewer-or-md),
    var(--rainviewer-or-hv),
-   var(--rainviewer-or-hl),
+   var(--rainviewer-or-vh),
+   var(--rainviewer-or-ew),
    var(--rainviewer-or-end))
 }
 
@@ -110,7 +122,8 @@
    var(--rainviewer-ub-lt),
    var(--rainviewer-ub-md),
    var(--rainviewer-ub-hv),
-   var(--rainviewer-ub-hl),
+   var(--rainviewer-ub-vh),
+   var(--rainviewer-ub-ew),
    var(--rainviewer-ub-end))
 }
 
@@ -121,7 +134,8 @@
    var(--rainviewer-tt-lt),
    var(--rainviewer-tt-md),
    var(--rainviewer-tt-hv),
-   var(--rainviewer-tt-hl),
+   var(--rainviewer-tt-vh),
+   var(--rainviewer-tt-ew),
    var(--rainviewer-tt-end))
 }
 
@@ -132,7 +146,8 @@
    var(--rainviewer-wc-lt),
    var(--rainviewer-wc-md),
    var(--rainviewer-wc-hv),
-   var(--rainviewer-wc-hl),
+   var(--rainviewer-wc-vh),
+   var(--rainviewer-wc-ew),
    var(--rainviewer-wc-end))
 }
 
@@ -143,7 +158,8 @@
    var(--rainviewer-mt-lt),
    var(--rainviewer-mt-md),
    var(--rainviewer-mt-hv),
-   var(--rainviewer-mt-hl),
+   var(--rainviewer-mt-vh),
+   var(--rainviewer-mt-ew),
    var(--rainviewer-mt-end))
 }
 
@@ -154,7 +170,8 @@
    var(--rainviewer-nr-lt),
    var(--rainviewer-nr-md),
    var(--rainviewer-nr-hv),
-   var(--rainviewer-nr-hl),
+   var(--rainviewer-nr-vh),
+   var(--rainviewer-nr-ew),
    var(--rainviewer-nr-end))
 }
 
@@ -165,7 +182,8 @@
    var(--rainviewer-rs-lt),
    var(--rainviewer-rs-md),
    var(--rainviewer-rs-hv),
-   var(--rainviewer-rs-hl),
+   var(--rainviewer-rs-vh),
+   var(--rainviewer-rs-ew),
    var(--rainviewer-rs-end))
 }
 
@@ -176,6 +194,11 @@
    var(--rainviewer-ds-lt),
    var(--rainviewer-ds-md),
    var(--rainviewer-ds-hv),
-   var(--rainviewer-ds-hl),
+   var(--rainviewer-ds-vh),
+   var(--rainviewer-ds-ew),
    var(--rainviewer-ds-end))
+}
+
+.rainviewer-legend-txt {
+  font-size: small;
 }
