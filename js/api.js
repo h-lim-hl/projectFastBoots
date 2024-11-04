@@ -1,3 +1,6 @@
+const apiDataReady = new CustomEvent(`apiDataReady`);
+
+
 const OPEN_DATA_API = {
   "url": {
     "RTD_24H_Forecast":
@@ -206,6 +209,7 @@ const OPEN_DATA_API = {
     for (let updatefn of OPEN_DATA_API.updateApiDataFns.values()) {
       await updatefn(updateRegions); 
     }
+    document.dispatchEvent(apiDataReady);
   },
 
   "startAllUpdateIntervals" : async function () {

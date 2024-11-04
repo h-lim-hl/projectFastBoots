@@ -103,12 +103,39 @@ document.addEventListener("rainviewerApiUpdated", () => {
   console.log("displayRainviewer");
 });
 
+// ===============
+function testGetDivIcon () {
+  return L.divIcon({
+    "className" : ``,
+    "html": `
+          <div class="container">
+              <div class="align-content-center text-center" style="height: 50px; width: 50px; border-radius: 50%; background-color: lightseagreen;">&#8593;</div>
+          </div>
+          `,
+    "iconSize": [30,30]
+  });
+}
+
+function testAddDivIconMarkers () {
+  let divIconTestGrp = L.layerGroup();
+  const icon = testGetDivIcon();
+  for(let o of apiData.neighbourhoods) {
+    L.marker(o[1].location, {"icon": icon}).addTo(divIconTestGrp);
+  }
+  return divIconTestGrp;
+}
+
+document.addEventListener("apiDataReady", () => {
+  console.log(`hello`);
+  testAddDivIconMarkers().addTo(map);
+});
+
 // if(RAIN_VIEWER_API.isReady) {
 //   addRainviewerLayer();
 // }
 
 // ====== Open Data
-OPEN_DATA_API.updateApiDataAll(true);
+// OPEN_DATA_API.updateApiDataAll(true);
 //OPEN_DATA_API.updateApiDataFns.get("12H")();
 
 // setTimeout(() => {
