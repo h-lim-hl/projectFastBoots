@@ -70,3 +70,6 @@ Data Vis
 
 ## change color w/o sass
 https://medium.com/@Hermanhasawish/how-i-repainted-bootstrap-without-sass-d789f41aa74b
+
+## svg icons
+https://www.svgrepo.com/collection/weather-34/
