@@ -52,9 +52,10 @@ function getHeatIndex(deg, rh, isFahrenheit = false) {
       2.221732e-3, 7.2546e-4, -3.582e-6
     ];
   }
-  return c[0] + c[1]*deg, +  c[2]*rh +
+  let ret = c[0] + c[1]*deg + c[2]*rh +
   c[3]*deg*rh + c[4]*deg*deg + c[5]*rh*rh +
   c[6]*deg*deg*rh + c[7]*deg*rh*rh + c[8]*deg*deg*rh*rh;
+  return ret;
 }
 
 // Add baselayer control
@@ -89,7 +90,7 @@ L.control.zoom({
 // =========== Rainviewer
 let rainviewerLayer = undefined;
 let rainviewerControl = undefined;
-let rainviewerColorScheme = Object.values(colorSchemeToCssClass)[1];
+// let rainviewerColorScheme = Object.values(colorSchemeToCssClass)[1];
 
 function removeRainviewerLayer() {
   if(rainviewerLayer === undefined) return;
@@ -111,7 +112,7 @@ function addRainviewerLayer() {
   rainviewerControl = L.control({position : 'topleft'});
   rainviewerControl.onAdd = () => {
     let legend = L.DomUtil.create('div');
-    legend.innerHTML += getRainviewerLegend(rainviewerColorScheme);
+    legend.innerHTML += getRainviewerLegend(Object.values(colorSchemeToCssClass)[rainviewerOptions.color]);
     return legend;
   };
   
@@ -150,11 +151,11 @@ function getTownMarker (name) {
       <div class="d-flex flex-column align-items-center" style="width: 80px; border-radius: 5%; font-size: small; background-color: ghostwhite; opacity: 0.8;">
         <div class="align-middle">
           <div style="background-color: white; border-radius: 50%; height: 24px; width: 24px; border-width: 1px; border-color: maroon; border-style: solid; margin-top: 5px;">
-            <img src="images/skyscrapper-edifice.svg" style="height: 18px; width: 18px; margin-left: 2px; margin-top: -2.5px;">
+            <img src="images/skyscrapper-edifice.svg" style="height: 18px; width: 18px; margin: 0 0 1pt 2pt">
           </div>
         </div>
         <div class="align-middle" style="margin-bottom: 3px; text-align: center">
-          <b><u>${name}</u></b>
+          <b><u>${name?name:"Unnamed"}</u></b>
         </div>
       </div>
     </div>
@@ -183,34 +184,34 @@ function getTownLayer() {
 
 // =============== leaflet Temperature Markers
 function getTemperatureMarker(name, data) {
-  const heatIndex = Math.round((getHeatIndex(data.temp, data.rh) + Number.EPSILON) * 100) / 100;
+  const heatIndex = Math.round((getHeatIndex(data.temp, data.rh) + Number.EPSILON) * 10) / 10;
   const html =
   `
     <div class="d-flex flex-column align-items-center"
-      style="width: 80px; border-radius: 5%; font-size: small; background-color: ghostwhite;">
+      style="width: 80px; border-radius: 5%; font-size: small; background-color: ghostwhite; opacity: 0.8">
       <div class="align-middle">
         <div
-          style="background-color: white; border-radius: 50%; height: 32px; width: 32px; border-width: 1px; border-color: maroon; border-style: solid; margin-top: 5px;">
-          <img class="mapTownIcon" src="images/global-warming.svg" style="height: 26px; width: 26px; margin: 2px;">
+          style="background-color: white; border-radius: 50%; height: 24px; width: 24px; border-width: 1px; border-color: maroon; border-style: solid; margin-top: 5px;">
+          <img class="mapTownIcon" src="images/global-warming.svg" style="height: 18px; width: 18px; margin: .5pt 0 0 2pt ">
         </div>
       </div>
       <div class="align-middle" style="text-align: center">
-        <b><u>${name}</u></b>
+        <b><u>${name?name:"Unnamed"}</u></b>
       </div>
       <div class="align-middle" style="margin-bottom: 8px;">
         <table>
           <tr>
             <td style="text-align: right;">Temp:</td>
-            <td>${data.temp}&degc</td>
+            <td>${data.temp?data.temp:"NaN "}&degc</td>
           </tr>
           <tr>
             <td style="text-align: right;">RH:</td>
-            <td>${data.rh}%</td>
+            <td>${data.rh?data.rh:"NaN "}%</td>
           </tr>
-          <!-- <tr>
+          <tr>
             <td style="text-align: right;">Feels:</td>
             <td>${heatIndex}&degc</td>
-          </tr> -->
+          </tr>
         </table>
       </div>
     </div>
@@ -230,11 +231,11 @@ function getTemperatureLayer() {
   let data = {};
 
   for( let o of apiData.airTemp.data) {
-    if(!data[o.stationId]) data[o.stationId] = {};
+    data[o.stationId] ??= {};
     data[o.stationId]["temp"] = o.value;
   }
   for(let o of apiData.relativeHumidity.data) {
-    if(!data[o.stationId]) data[o.stationId] = {};
+    data[o.stationId] ??= {};
     data[o.stationId]["rh"] = o.value;
   }
   for(let o of Object.keys(data)) {
@@ -247,7 +248,7 @@ function getTemperatureLayer() {
   }
 
   for(let o of Object.entries(data)) {
-    const icon = getTemperatureMarker(o[1].name, {temp : o[1].temp, rh : o[1].rh})
+    const icon = getTemperatureMarker(o[1].name, {"temp" : o[1].temp, "rh" : o[1].rh})
     L.marker(o[1].location, {"icon": icon}).addTo(divTemperatureLayer);
   }
 
@@ -255,12 +256,81 @@ function getTemperatureLayer() {
 }
 
 
-// =============== leaflet Neighbourhood Markers
+// =============== leaflet Wind Markers
+function getWindIcon(name, data) {
+  const html =`
+    <div>
+      <div class="d-flex flex-column align-items-center" style="width: 80px; border-radius: 5%; font-size: small; background-color: ghostwhite; opacity:0.8">
+        <div class="align-middle">
+          <div style="background-color: white; border-radius: 50%; height: 24px; width: 24px; border-width: 1px; border-color: black; border-style: solid; margin-top: 5px;">
+            <img src="images/wind.svg" style="height: 18px; width: 18px; margin: 2.5px;">
+          </div>
+        </div>
+        <div class="align-middle" style="text-align: center">
+          <b><u>${name?name:"Unnamed"}</u></b>
+        </div>
+        <div style="transform: rotate(${data.windDir?data.windDir+180:0}deg); margin-bottom: -3px;">
+          <i class="bi ${data.windDir?"bi-arrow-up-circle":"bi-exclamation-octagon-fill text-danger"}" style="font-size: 1.25rem;"></i>
+        </div>
+        <div style="margin-bottom: 8px;">
+          <table style="font-size: .76rem;">
+            <tr>
+              <td style="text-align: right;">Bearing:</td>
+              <td>${data.windDir?data.windDir:"NaN "}&deg</td>
+            </tr>
+            <tr>
+              <td style="text-align: right;">Speed:</td>
+              <td>${data.windSpd?data.windSpd:"NaN "}kn</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+  const iconSize = getDivIconSize(html);
+  return L.divIcon({
+      "className":"",
+      "html":html,
+      "iconSize" : iconSize,
+      "iconAnchor" : [iconSize[0]*0.5, iconSize[1]*0.5]
+    });
+}
 
+function getWindLayer() {
+  let divWindLayer = new L.layerGroup();
+  let data = {};
+
+  for(let o of apiData.windDirection.data) {
+    data[o.stationId] ??= {};
+    data[o.stationId]["windDir"] = o.value;
+  }
+
+  for(let o of apiData.windSpeed.data) {
+    data[o.stationId] ??= {};
+    data[o.stationId]["windSpd"] = o.value;
+  }
+
+  for(let o of Object.keys(data)) {
+    const station = apiData.stations.get(o);
+    let name, location;
+    if (!station) { name = ""; location = [0, 0]; }
+    else { name = station.name; location = station.location; }
+    data[o]["name"] = name;
+    data[o]["location"] = location;
+  }
+
+  for(let o of Object.entries(data)) {
+    const icon = getWindIcon(o[1].name, {"windDir": o[1].windDir, "windSpd": o[1].windSpd});
+    L.marker(o[1].location, {"icon": icon}).addTo(divWindLayer);
+  }
+
+  return divWindLayer;
+}
 // =============== leaflet TESTING markers
 document.addEventListener("apiDataReady", () => {
   getTownLayer().addTo(map);
   getTemperatureLayer().addTo(map);
+  getWindLayer().addTo(map);
 });
 
 // if(RAIN_VIEWER_API.isReady) {
