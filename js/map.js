@@ -38,6 +38,7 @@ const BASE_MAPS = {
     })
 };
 // https://en.wikipedia.org/wiki/Heat_index#Formula
+// NEEDS CHECKING
 function getHeatIndex(deg, rh, isFahrenheit = false) {
   let c;
   if(isFahrenheit) {
@@ -124,47 +125,46 @@ document.addEventListener("rainviewerApiUpdated", () => {
   console.log("displayRainviewer");
 });
 
-// ===============
-function testGetDivIcon () {
-  return L.divIcon({
-    "className" : ``,
-    "html": `
-          <div class="container">
-              <div class="align-content-center text-center" style="height: 50px; width: 50px; border-radius: 50%; background-color: lightseagreen;">&#8593;</div>
-          </div>
-          `,
-    "iconSize": [30,30]
-  });
+// =============== leaflet markers
+
+function getDivIconSize(divIconHtml) {
+  let tempDiv = document.createElement("div");
+  tempDiv.style.position = "absolute";
+  tempDiv.style.visibility = "hidden";
+  tempDiv.style.pointerEvents = "none";
+  tempDiv.innerHTML = divIconHtml;
+
+  document.body.appendChild(tempDiv);
+  let divWidth = tempDiv.offsetWidth;
+  let divHeight = tempDiv.offsetHeight;
+  document.body.removeChild(tempDiv);
+
+  return [divWidth, divHeight];
 }
 
-function testAddDivIconMarkers () {
-  let divIconTestGrp = L.layerGroup();
-  const icon = testGetDivIcon();
-  for(let o of apiData.neighbourhoods) {
-    L.marker(o[1].location, {"icon": icon}).addTo(divIconTestGrp);
-  }
-  return divIconTestGrp;
-}
-
-function getTownMarker (name, pxWidth) {
-  const cardBgColor = "ghostwhite";
-  const iconBgColor = "white";
-  return L.divIcon({
-    "className" : "",
-    "html" : `
-      <div>
-        <div class="d-flex flex-column align-items-center" style="width: ${pxWidth}px; border-radius: 5%; font-size: small; background-color: ${cardBgColor}; opacity: 0.8;">
-          <div class="align-middle">
-            <div style="background-color: ${iconBgColor}; border-radius: 50%; height: 24px; width: 24px; border-width: 1px; border-color: maroon; border-style: solid; margin-top: 5px;">
-              <img src="images/skyscrapper-edifice.svg" style="height: 18px; width: 18px; margin-left: 2px; margin-top: -2.5px;">
-            </div>
-          </div>
-          <div class="align-middle" style="margin-bottom: 3px; text-align: center">
-            <b><u>${name}</u></b>
+// =============== leaflet Neighbourhood Markers
+function getTownMarker (name) {
+  const html =
+  `
+    <div>
+      <div class="d-flex flex-column align-items-center" style="width: 80px; border-radius: 5%; font-size: small; background-color: ghostwhite; opacity: 0.8;">
+        <div class="align-middle">
+          <div style="background-color: white; border-radius: 50%; height: 24px; width: 24px; border-width: 1px; border-color: maroon; border-style: solid; margin-top: 5px;">
+            <img src="images/skyscrapper-edifice.svg" style="height: 18px; width: 18px; margin-left: 2px; margin-top: -2.5px;">
           </div>
         </div>
+        <div class="align-middle" style="margin-bottom: 3px; text-align: center">
+          <b><u>${name}</u></b>
+        </div>
       </div>
-    `,
+    </div>
+  `;
+  const iconSize = getDivIconSize(html);
+  return L.divIcon({
+    "className" : "",
+    "html" : html,
+    "iconSize" : iconSize,
+    "iconAnchor" : [iconSize[0]*0.5, iconSize[1]*0.5]
   });
 }
 
@@ -175,45 +175,92 @@ function getTownLayer() {
     }
   });
   for(let o of apiData.neighbourhoods.entries()) {
-    const icon = getTownMarker(o[0], 80)
+    const icon = getTownMarker(o[0])
     L.marker(o[1].location, {"icon": icon}).addTo(divTownGrp);
   }
   return divTownGrp;
 }
 
-function getInfomationMaker(imgUrl, title, data, pxMarginLeft, pxMarginTop) {
-  let dataHtml;
-  for(let e of Object.entries(data)) {
-    dataHtml += `<tr><td>${e[0]}:</td><td>${e[1]}</td></tr>`;
-  }
-  return L.divIcon({
-    "className" : "",
-    "html" : `
-      <div>
-        <div class="d-flex flex-column align-items-center" style="width: 80px; border-radius: 5%; font-size: small; background-color: ghostwhite;">
-          <div class="align-middle">
-            <div style="background-color: white; border-radius: 50%; height: 32px; width: 32px; border-width: 1px; border-color: maroon; border-style: solid; margin-top: 5px;">
-              <img src="${imgUrl}" style="height: 26px; width: 26px; margin-left: ${pxMarginLeft}px; margin-top: ${pxMarginTop}px;">
-            </div>
-          </div>
-          <div class="align-middle" style="text-align: center">
-            <b><u>${title}</u></b>
-          </div>
-          <div style="margin-bottom: 8px;">
-            <tb>
-              ${dataHtml}
-            </tb>
-          </div>
+// =============== leaflet Temperature Markers
+function getTemperatureMarker(name, data) {
+  const heatIndex = Math.round((getHeatIndex(data.temp, data.rh) + Number.EPSILON) * 100) / 100;
+  const html =
+  `
+    <div class="d-flex flex-column align-items-center"
+      style="width: 80px; border-radius: 5%; font-size: small; background-color: ghostwhite;">
+      <div class="align-middle">
+        <div
+          style="background-color: white; border-radius: 50%; height: 32px; width: 32px; border-width: 1px; border-color: maroon; border-style: solid; margin-top: 5px;">
+          <img class="mapTownIcon" src="images/global-warming.svg" style="height: 26px; width: 26px; margin: 2px;">
         </div>
       </div>
-    `,
+      <div class="align-middle" style="text-align: center">
+        <b><u>${name}</u></b>
+      </div>
+      <div class="align-middle" style="margin-bottom: 8px;">
+        <table>
+          <tr>
+            <td style="text-align: right;">Temp:</td>
+            <td>${data.temp}&degc</td>
+          </tr>
+          <tr>
+            <td style="text-align: right;">RH:</td>
+            <td>${data.rh}%</td>
+          </tr>
+          <!-- <tr>
+            <td style="text-align: right;">Feels:</td>
+            <td>${heatIndex}&degc</td>
+          </tr> -->
+        </table>
+      </div>
+    </div>
+  `;
+
+  const iconSize = getDivIconSize(html);
+  return L.divIcon({
+    "className" : "",
+    "html" : `${html}`,
+    "iconSize" : iconSize,
+    "iconAnchor" : [iconSize[0]*0.5, iconSize[1]*0.5]
   });
 }
 
-// function
+function getTemperatureLayer() {
+  let divTemperatureLayer = new L.layerGroup();
+  let data = {};
 
+  for( let o of apiData.airTemp.data) {
+    if(!data[o.stationId]) data[o.stationId] = {};
+    data[o.stationId]["temp"] = o.value;
+  }
+  for(let o of apiData.relativeHumidity.data) {
+    if(!data[o.stationId]) data[o.stationId] = {};
+    data[o.stationId]["rh"] = o.value;
+  }
+  for(let o of Object.keys(data)) {
+    const station = apiData.stations.get(o);
+    let name, location;
+    if (!station) { name = ""; location = [0, 0]; }
+    else { name = station.name; location = station.location; }
+    data[o]["name"] = name;
+    data[o]["location"] = location;
+  }
+
+  for(let o of Object.entries(data)) {
+    const icon = getTemperatureMarker(o[1].name, {temp : o[1].temp, rh : o[1].rh})
+    L.marker(o[1].location, {"icon": icon}).addTo(divTemperatureLayer);
+  }
+
+  return divTemperatureLayer;
+}
+
+
+// =============== leaflet Neighbourhood Markers
+
+// =============== leaflet TESTING markers
 document.addEventListener("apiDataReady", () => {
   getTownLayer().addTo(map);
+  getTemperatureLayer().addTo(map);
 });
 
 // if(RAIN_VIEWER_API.isReady) {
