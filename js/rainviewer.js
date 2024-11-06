@@ -63,12 +63,12 @@ function getRainviewerLegend(colorScheme) {
   <div>
     <div class="row" style="height: 100%;">
       <div class="align-content-center"
-        style="margin-left: 10px; background-color: rgb(196, 196, 196); width: 32px; border-radius: 8px 0 0 8px">
+        style="margin-left: 10px; background-color: rgb(240, 240, 240); width: 32px; border-radius: 8px 0 0 8px; border-style: solid hidden solid solid; border-color: rgba(0, 0, 0, 0.2); border-width: 2px;">
         <div class="${colorScheme}"
           style="height: 90%; border-radius: 16px; border-color: grey; border-width: 1px; border-style:groove">
         </div>
       </div>
-      <div style="background: lightgray; width:100px; border-radius: 0px 8px 8px 0">
+            <div style="background: rgb(255,255,255); width:100px; border-radius: 0px 8px 8px 0; border-style: solid solid solid hidden; border-color: rgba(0, 0, 0, 0.2); border-width: 2px;">
         <div class="pt-1 d-flex flex-column justify-content-between">
           <p class="rainviewer-legend-txt pt-1">Overcast</p>
           <p class="rainviewer-legend-txt">Dizzle</p>

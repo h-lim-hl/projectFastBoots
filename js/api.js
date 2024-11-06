@@ -107,7 +107,11 @@ const OPEN_DATA_API = {
             apiData.windDirection.data = windDir.data.data.readings[0].data;
           }))
           .catch((err) => {
-            console.error(`updateApiDataFns.1M(): ${err}`);
+            if (err.response) {
+              console.error(`Error in request to ${err.config.url}:`, err.response.data);
+            } else {
+              console.error('Request failed:', err.message);
+            }
           });
         
     }],
@@ -128,7 +132,11 @@ const OPEN_DATA_API = {
             apiData.rainfall.data = rainfall.data.data.readings[0].data;
           }))
           .catch((err) => {
-            console.error(`updateApitDataFn.5M(): ${err}`);
+            if (err.response) {
+              console.error(`Error in request to ${err.config.url}:`, err.response.data);
+            } else {
+              console.error('Request failed:', err.message);
+            }
           });
     }],
 
@@ -141,18 +149,21 @@ const OPEN_DATA_API = {
           if(updateRegions) {
             OPEN_DATA_API.updateNeighbourhoods(forecast2H.data.data.area_metadata);
           }
-          
           apiData.forecast2H.lastUpdate = new Date(
-            forecast2H.data.data.items[0].update_Timestamp
+            forecast2H.data.data.items[0].update_timestamp
           );
           apiData.forecast2H.validUntil = new Date(
             forecast2H.data.data.items[0].valid_period.end
           );
           apiData.forecast2H.forecast =
-          forecast2H.data.data.items[0].forecast;
+          forecast2H.data.data.items[0].forecasts;
         }))
         .catch((err) => {
-          console.error(`updateApitDataFnMap.30M(): ${err}`)
+          if (err.response) {
+            console.error(`Error in request to ${err.config.url}:`, err.response.data);
+          } else {
+            console.error('Request failed:', err.message);
+          }
         });
     }],
 
@@ -181,7 +192,11 @@ const OPEN_DATA_API = {
           apiData.uvi.data = uvi.data.data.records[0].index;
         }))
         .catch((err) => {
-          console.error(`updateApitDataFnMap.5M(): ${err}`);
+          if (err.response) {
+            console.error(`Error in request to ${err.config.url}:`, err.response.data);
+          } else {
+            console.error('Request failed:', err.message);
+          }
         });
     }],
 
@@ -198,9 +213,17 @@ const OPEN_DATA_API = {
             forecast4D.data.data.records[0].updatedTimestamp
           );
           apiData.outlook4D.forecast = forecast4D.data.data.records[0].forecasts;
+          apiData.outlook4D.error = true;
         }))
         .catch((err) => {
-          console.error(`updateApitDataFnMap.5M(): ${err}`);
+          if (err.response) {
+            console.error(`Error in request to ${err.config.url}:`, err.response.data);
+            if(err.config.url === OPEN_DATA_API.url.RT12H_4D_Forecast) {
+              apiData.outlook4D.error = true;
+            }
+          } else {
+            console.error('Request failed:', err.message);
+          }
         });
     }]
   ]),
@@ -294,8 +317,6 @@ const apiData = {
   },
 
   "internals" : new Map(),
-
-  "isRainviewerReady" : false,
 
   "last" : 0
 }; Object.seal(apiData);

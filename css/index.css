@@ -1,3 +1,25 @@
 .content-height{
   height: 88vh;
 }
+
+.me-half {
+  margin-left: .125rem !important;
+}
+
+.me-quarter {
+  margin-left: .0625rem !important;
+}
+
+.mapTownIcon {
+  margin-left: -2px;
+  margin-top: -2.5px;
+}
+
+.navbar {
+  position: absolute;
+  z-index: 1050;
+}
+
+.navbar-collapse {
+  z-index: 1050;
+}
