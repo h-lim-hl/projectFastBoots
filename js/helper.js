@@ -49,4 +49,10 @@ const HELPER = {
 
     return matrix[stringA.length][stringB.length];
   },
+
+  "sigFig" : (num, digits) => {
+    digits = Math.round(10 ** digits + Number.EPSILON);
+    digits = digits < 1 ? 1 : digits;
+    return Math.round((num + Number.EPSILON) * digits) / digits;
+  }
 };

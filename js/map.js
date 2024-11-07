@@ -147,6 +147,8 @@ function getDivIconSize(divIconHtml) {
 }
 
 // =============== leaflet Neighbourhood Markers
+let townLayer = undefined;
+
 function getTownMarker (name) {
   const html =
   `
@@ -175,6 +177,7 @@ function getTownMarker (name) {
 function getTownLayer() {
   let divTownGrp = new L.MarkerClusterGroup({
     "iconCreateFunction" : (cluster) => {
+      console.log(cluster);
       return getTownMarker(cluster.getChildCount(), 30);
     }
   });
@@ -185,9 +188,26 @@ function getTownLayer() {
   return divTownGrp;
 }
 
+function addTownLayer () {
+  townLayer = getTownLayer();
+  map.addLayer(townLayer);
+}
+
+function removeTownLayer() {
+  map.removeLayer(townLayer);
+  townLayer = undefined;
+}
+
+function refreshTownLayer() {
+  removeTownLayer();
+  addTownLayer();
+}
+
 // =============== leaflet Temperature Markers
+let temperatureLayer = undefined;
+
 function getTemperatureMarker(name, data) {
-  const heatIndex = Math.round((getHeatIndex(data.temp, data.rh) + Number.EPSILON) * 10) / 10;
+  const heatIndex = HELPER.sigFig(getHeatIndex(data.temp, data.rh), 1);
   const html =
   `
     <div class="d-flex flex-column align-items-center"
@@ -195,7 +215,7 @@ function getTemperatureMarker(name, data) {
       <div class="align-middle">
         <div
           style="background-color: white; border-radius: 50%; height: 24px; width: 24px; border-width: 1px; border-color: maroon; border-style: solid; margin-top: 5px;">
-          <img class="mapTownIcon" src="images/global-warming.svg" style="height: 18px; width: 18px; margin: .5pt 0 0 2pt ">
+          <img class="mapTownIcon" src="images/global-warming.svg" style="height: 18px; width: 18px; margin: .5pt 0 0 1.5pt ">
         </div>
       </div>
       <div class="align-middle" style="text-align: center">
@@ -258,8 +278,24 @@ function getTemperatureLayer() {
   return divTemperatureLayer;
 }
 
+function addTemperatureLayer() {
+  temperatureLayer = getTemperatureLayer();
+  map.addLayer(temperatureLayer);
+}
+
+function removeTemperatureLayer() {
+  map.removeLayer(temperatureLayer);
+  temperatureLayer = undefined;
+}
+
+function refreshTemperatureLayer() {
+  removeTemperatureLayer();
+  addTemperatureLayer();
+}
 
 // =============== leaflet Wind Markers
+let windLayer = undefined;
+
 function getWindIcon(name, data) {
   const html =`
     <div>
@@ -329,11 +365,110 @@ function getWindLayer() {
 
   return divWindLayer;
 }
+
+function addWindLayer() {
+  windLayer = getWindLayer();
+  map.addLayer(windLayer);
+}
+
+function removeWindLayer() {
+  map.removeLayer(windLayer);
+  windLayer = undefined;
+}
+
+function refreshWindLayer() {
+  removeWindLayer();
+  addWindLayer();
+}
+
+// =============== leaflet Rainfall Markers
+let rainfallLayer = undefined;
+
+function getRainfallIcon(name, data) {
+  const html = `
+    <div>
+      <div class="d-flex flex-column align-items-center" style="width: 80px; border-radius: 5%; font-size: small; background-color: ghostwhite; opacity:0.8">
+        <div class="align-middle">
+          <div style="background-color: white; border-radius: 50%; height: 24px; width: 24px; border-width: 1px; border-color: black; border-style: solid; margin-top: 5px;">
+            <img class="mapTownIcon" src="images/raindrop-drop.svg" style="height: 18px; width: 18px; margin: 0 0 0.5pt 1.5pt;">
+          </div>
+        </div>
+        <div class="align-middle text-center">
+          <b><u>${name}</u></b>
+        </div>
+        <div class="align-middle text-center">
+          ${getRainfallCatergory(data.mmPer5min)}
+        </div>
+        <div class="align-middle text-center">
+          Rainfall:
+        </div>
+        <div style="margin-bottom: 8px;">
+          <table style="font-size: .76rem;">
+            <tr>
+              <td>${HELPER.sigFig(data.mmPer5min, 1)}</td>
+              <td style="font-size: smaller; text-align:left; vertical-align:bottom;">mm/min</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+  const iconSize = getDivIconSize(html);
+  return L.divIcon({
+      "className":"",
+      "html":html,
+      "iconSize" : iconSize,
+      "iconAnchor" : [iconSize[0]*0.5, iconSize[1]*0.5]
+    });
+}
+
+function getRainfallLayer() {
+  let divRainfallLayer = new L.layerGroup();
+  let data = {};
+
+  for(let o of apiData.rainfall.data) {
+    data[o.stationId] ??= {};
+    data[o.stationId]["mmPer5min"] = o.value;
+  }
+
+  for(let o of Object.keys(data)) {
+    const station = apiData.stations.get(o);
+    let name, location;
+    if (!station) { name = ""; location = [0, 0]; }
+    else { name = station.name; location = station.location; }
+    data[o]["name"] = name;
+    data[o]["location"] = location;
+  }
+
+  for(let o of Object.entries(data)) {
+    const icon = getRainfallIcon(o[1].name, {"mmPer5min": o[1].mmPer5min});
+    L.marker(o[1].location, {"icon": icon}).addTo(divRainfallLayer);
+  }
+
+  return divRainfallLayer;
+}
+
+function addRainfallLayer() {
+  rainfallLayer = getRainfallLayer();
+  map.addLayer(rainfallLayer);
+}
+
+function removeRainfallLayer() {
+  map.removeLayer(rainfallLayer);
+  rainfallLayer = undefined;
+}
+
+function refreshRainfallLayer() {
+  removeRainfallLayer();
+  addRainfallLayer();
+}
+
 // =============== leaflet TESTING markers
 document.addEventListener("apiDataReady", () => {
-  getTownLayer().addTo(map);
-  getTemperatureLayer().addTo(map);
-  getWindLayer().addTo(map);
+  // addTownLayer();
+  // addTemperatureLayer();
+  // addWindLayer();
+  addRainfallLayer();
 });
 
 // if(RAIN_VIEWER_API.isReady) {

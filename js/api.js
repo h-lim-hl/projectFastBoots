@@ -1,4 +1,15 @@
 const apiDataReady = new CustomEvent(`apiDataReady`);
+const forecast24Updated = new CustomEvent(`forecast24DUpdated`);
+const relativeHumidityUpdated = new CustomEvent(`relativeHumidityUpdated`);
+const airTemperatureUpdated = new CustomEvent(`airTemperatureUpdated`);
+const windSpeedUpdated = new CustomEvent(`windSpeedUpdated`);
+const windDirectionUpdated = new CustomEvent(`windDirectionUpdated`);
+const rainfallUpdated = new CustomEvent(`rainfallUpdated`);
+const forecast2hUpdated = new CustomEvent(`forecast2hUpdated`);
+const uviUpdated = new CustomEvent(`uviUpdated`);
+const psiUpdated = new CustomEvent(`psiUpdated`);
+const pm25Updated = new CustomEvent(`pm25Updated`);
+const forecast4dUpdated = new CustomEvent(`forecast4dUpdated`);
 
 
 const OPEN_DATA_API = {
@@ -80,11 +91,11 @@ const OPEN_DATA_API = {
       const responses = await Promise.allSettled(requests);
 
       responses.forEach((res, i) => {
-        if(res.status = "fullfilled") {
-          let data = responses[i].value.data.data;
-          switch(i) {
+        if (res.status === "fulfilled") {
+          let data = res.value.data.data;
+          switch (i) {
             case 0:
-              if(updateRegions) OPEN_DATA_API.updateStations(data.stations);
+              if (updateRegions) OPEN_DATA_API.updateStations(data.stations);
               apiData.relativeHumidity.lastUpdate = new Date(
                 data.readings[0].timestamp
               );
@@ -93,7 +104,7 @@ const OPEN_DATA_API = {
               break;
 
             case 1:
-              if(updateRegions) OPEN_DATA_API.updateStations(data.stations);
+              if (updateRegions) OPEN_DATA_API.updateStations(data.stations);
               apiData.airTemp.lastUpdate = new Date(
                 data.readings[0].timestamp
               );
@@ -102,7 +113,7 @@ const OPEN_DATA_API = {
               break;
 
             case 2:
-              if(updateRegions) OPEN_DATA_API.updateStations(data.stations);
+              if (updateRegions) OPEN_DATA_API.updateStations(data.stations);
               apiData.windSpeed.lastUpdate = new Date(
                 data.readings[0].timestamp
               );
@@ -111,7 +122,7 @@ const OPEN_DATA_API = {
               break;
 
             case 3:
-              if(updateRegions) OPEN_DATA_API.updateStations(data.stations);
+              if (updateRegions) OPEN_DATA_API.updateStations(data.stations);
               apiData.windDirection.lastUpdate = new Date(
                 data.readings[0].timestamp
               );
@@ -120,10 +131,10 @@ const OPEN_DATA_API = {
               break;
 
             default:
-              console.error("Unhandled response");
+              console.error(`Unhandled response[${i}]:\n${res}`);
           }
         } else {
-          switch(i) {
+          switch (i) {
             case 0:
               apiData.relativeHumidity.error = true;
               break;
@@ -136,167 +147,189 @@ const OPEN_DATA_API = {
             case 3:
               apiData.windDirection.error = true;
               break;
-            
+
             default:
-              console.error("Unhandled response");
+              console.error(`Unhandled response[${i}]:\n${res}`);
           }
-        } 
+        }
+        document.dispatchEvent(relativeHumidityUpdated);
+        document.dispatchEvent(airTemperatureUpdated);
+        document.dispatchEvent(windSpeedUpdated);
+        document.dispatchEvent(windDirectionUpdated);
+
       });
     }],
 
     ["5M", async function (updateRegions = false) {
-      const endpoints = [
-        OPEN_DATA_API.url.RT5_RAINFALL
+      const requests = [
+        axios.get(OPEN_DATA_API.url.RT5_RAINFALL)
       ];
 
-      await axios.all(endpoints.map((endpoint) => axios.get(endpoint)))
-        .then(axios.spread((rainfall) => {
-          if (updateRegions) {
-            OPEN_DATA_API.updateStations(rainfall.data.data.stations);
+      const responses = await Promise.allSettled(requests);
+      responses.forEach((res, i) => {
+        if (res.status === "fulfilled") {
+          let data = res.value.data.data;
+          switch (i) {
+            case 0:
+              if (updateRegions) OPEN_DATA_API.updateStations(data.stations);
+              apiData.rainfall.lastUpdate = new Date(
+                data.readings[0].timestamp
+              );
+              apiData.rainfall.data = data.readings[0].data;
+              apiData.rainfall.error = false;
+              break;
+            default:
+              console.error(`Unhandled response[${i}]:\n${res}`);
           }
-          apiData.rainfall.lastUpdate = new Date(
-            rainfall.data.data.readings[0].timestamp
-          );
-          apiData.rainfall.data = rainfall.data.data.readings[0].data;
-
-          apiData.rainfall.error = false;
-        }))
-        .catch((err) => {
-          if (err.response) {
-            console.error(`Error in request to ${err.config.url}:`, err.response.data);
-            switch (err.config.url) {
-              case OPEN_DATA_API.url.RT5_RAINFALL:
-                apiData.rainfall.error = true;
-                break;
-
-              default:
-                console.error("Uncaught Error Status: ", err.config.url);
-            }
-          } else {
-            console.error('Request failed:', err.message);
+        } else {
+          switch (i) {
+            case 0:
+              apiData.relativeHumidity.error = true;
+              break;
+            default:
+              console.error(`Unhandled response[${i}]:\n${res}`);
           }
-        });
+        }
+        document.dispatchEvent(rainfallUpdated);
+      });
     }],
 
     ["30M", async function (updateRegions = false) {
-      const endpoints = [
-        OPEN_DATA_API.url.RT30_2H_Forecast
+      const requests = [
+        axios.get(OPEN_DATA_API.url.RT30_2H_Forecast)
       ];
-      await axios.all(endpoints.map((endpoint) => axios.get(endpoint)))
-        .then(axios.spread((forecast2H) => {
-          if (updateRegions) {
-            OPEN_DATA_API.updateNeighbourhoods(forecast2H.data.data.area_metadata);
-          }
-          apiData.forecast2H.lastUpdate = new Date(
-            forecast2H.data.data.items[0].update_timestamp
-          );
-          apiData.forecast2H.validUntil = new Date(
-            forecast2H.data.data.items[0].valid_period.end
-          );
-          apiData.forecast2H.forecast =
-            forecast2H.data.data.items[0].forecasts;
+      const responses = await Promise.allSettled(requests);
+      responses.forEach((res, i) => {
+        if (res.status === "fulfilled") {
+          let data = res.value.data.data;
+          switch (i) {
+            case 0:
+              if (updateRegions) {
+                OPEN_DATA_API.updateNeighbourhoods(data.area_metadata);
+              }
 
-          apiData.forecast2H.error = false;
-        }))
-        .catch((err) => {
-          if (err.response) {
-            console.error(`Error in request to ${err.config.url}:`, err.response.data);
-            switch (err.config.url) {
-              case OPEN_DATA_API.url.RT30_2H_Forecast:
-                apiData.forecast2H.error = true;
-                break;
+              apiData.forecast2H.lastUpdate = new Date(
+                data.items[0].update_timestamp
+              );
+              apiData.forecast2H.validUntil = new Date(
+                data.items[0].valid_period.end
+              );
+              apiData.forecast2H.forecast = data.items[0].forecasts;
 
-              default:
-                console.error("Uncaught Error Status: ", err.config.url);
-            }
-          } else {
-            console.error('Request failed:', err.message);
+              apiData.forecast2H.error = false;
+              break;
+            default:
+              console.error(`Unhandled response[${i}]:\n${res}`);
           }
-        });
+        } else {
+          switch (i) {
+            case 0:
+              apiData.forecast2H.error = true;
+              break;
+            default:
+              console.error(`Unhandled response[${i}]:\n${res}`);
+          }
+        }
+      });
+      document.dispatchEvent(forecast2hUpdated);
     }],
 
     ["1H", async function (updateRegions = false) {
-      const endpoints = [
-        OPEN_DATA_API.url.RT60_PM25,
-        OPEN_DATA_API.url.RT60_PSI,
-        OPEN_DATA_API.url.RT60_UVI
+      const requests = [
+        axios.get(OPEN_DATA_API.url.RT60_PM25),
+        axios.get(OPEN_DATA_API.url.RT60_PSI),
+        axios.get(OPEN_DATA_API.url.RT60_UVI)
       ];
 
-      await axios.all(endpoints.map((endpoint) => axios.get(endpoint)))
-        .then(axios.spread((pm25, psi, uvi) => {
-          if(updateRegions) {
-            OPEN_DATA_API.updateRegions(psi.data.data.regionMetadata);
-            OPEN_DATA_API.updateRegions(pm25.data.data.regionMetadata);
+      const response = await Promise.allSettled(requests);
+      response.forEach((res, i) => {
+        if (res.status === "fulfilled") {
+          let data = res.value.data.data;
+          switch (i) {
+            case 0:
+              if(updateRegions) {
+                OPEN_DATA_API.updateRegions(data.regionMetadata);
+              }
+              apiData.pm25.lastUpdate = 
+                new Date( data.items[0].updatedTimestamp);
+              apiData.pm25.data = data.items[0].readings.pm25_one_hourly;
+              apiData.pm25.error = false;
+              break;
+            case 1:
+              if(updateRegions) {
+                OPEN_DATA_API.updateRegions(data.regionMetadata);
+              }
+              apiData.psi.lastUpdate =
+                new Date( data.items[0].updatedTimestamp);
+              apiData.psi.data = data.items[0].readings;
+              apiData.psi.error = false;
+              break;
+            case 2:
+              apiData.uvi.lastUpdate =
+                new Date( data.records[0].updatedTimestamp );
+              apiData.uvi.data = data.records[0].index;
+              apiData.uvi.error = false;
+              break;
+            default:
+              console.error(`Unhandled response[${i}]:\n${res}`);
           }
-
-          apiData.pm25.lastUpdate = new Date(
-            pm25.data.data.items[0].updatedTimestamp
-          );
-          apiData.pm25.data = pm25.data.data.items[0].readings.pm25_one_hourly;
-
-          apiData.psi.lastUpdate = new Date(
-            psi.data.data.items[0].updatedTimestamp)
-            ;
-          apiData.psi.data = psi.data.data.items[0].readings;
-          
-          apiData.uvi.lastUpdate = new Date(
-            uvi.data.data.records[0].updatedTimestamp
-          );
-
-          apiData.uvi.data = uvi.data.data.records[0].index;
-
-          apiData.pm25.error = false;
-          apiData.psi.error = false;
-          apiData.uvi.error = false;
-
-        }))
-        .catch((err) => {
-          if (err.response) {
-            console.error(`Error in request to ${err.config.url}:`, err.response.data);
-            switch (err.config.url) {
-              case OPEN_DATA_API.url.RT60_PM25:
-                apiData.pm25.error = true;
-                break;
-
-              case OPEN_DATA_API.url.RT60_PSI:
-                apiData.psi.error = true;
-                break;
-
-              case OPEN_DATA_API.url.RT60_UVI:
-                apiData.uvi.error = true;
-                break;
-
-              default:
-                console.error("Uncaught Error Status: ", err.config.url);
-            }
-          } else {
-            console.error('Request failed:', err.message);
+        } else {
+          switch (i) {
+            case 0:
+              console.error("pm25Update Error: ", res.reason);
+              apiData.pm25.error = true;
+              break;
+            case 1:
+              console.error("psi5Update Error: ", res.reason);
+              apiData.psi.error = true;
+              break;
+            case 2:
+              console.error("uviUpdate Error: ", res.reason);
+              apiData.uvi.error = true;
+              break;
+            default:
+              console.error(`Unhandled response[${i}]:\n${res}`);
           }
-        });
+        }
+        document.dispatchEvent(pm25Updated);
+        document.dispatchEvent(psiUpdated);
+        document.dispatchEvent(uviUpdated);
+      });
     }],
 
     ["12H", async function (updateRegions = false) {
-      const endpoints = [
-        OPEN_DATA_API.url.RT12H_4D_Forecast
+      const requests = [
+        axios.get(OPEN_DATA_API.url.RT12H_4D_Forecast)
       ];
-      await axios.all(endpoints.map((endpoint) => axios.get(endpoint)))
-        .then(axios.spread((forecast4D) => {
-          apiData.outlook4D.lastUpdated = new Date(
-            forecast4D.data.data.records[0].updatedTimestamp
-          );
-          apiData.outlook4D.forecast = forecast4D.data.data.records[0].forecasts;
-          apiData.outlook4D.error = true;
-        }))
-        .catch((err) => {
-          if (err.response) {
-            console.error(`Error in request to ${err.config.url}:`, err.response.data);
-            if (err.config.url === OPEN_DATA_API.url.RT12H_4D_Forecast) {
-              apiData.outlook4D.error = true;
-            }
-          } else {
-            console.error('Request failed:', err.message);
-          }
-        });
+      
+      const responses = await Promise.allSettled(requests);
+      responses.forEach((res, i) => {
+        let data = res.value.data.data;
+        if(res.status === "fulfilled") {
+
+        } else {
+
+        }
+      });
+
+      // await axios.all(endpoints.map((endpoint) => axios.get(endpoint)))
+      //   .then(axios.spread((forecast4D) => {
+      //     apiData.outlook4D.lastUpdated = new Date(
+      //       forecast4D.data.data.records[0].updatedTimestamp
+      //     );
+      //     apiData.outlook4D.forecast = forecast4D.data.data.records[0].forecasts;
+      //     apiData.outlook4D.error = true;
+      //   }))
+      //   .catch((err) => {
+      //     if (err.response) {
+      //       console.error(`Error in request to ${err.config.url}:`, err.response.data);
+      //       if (err.config.url === OPEN_DATA_API.url.RT12H_4D_Forecast) {
+      //         apiData.outlook4D.error = true;
+      //       }
+      //     } else {
+      //       console.error('Request failed:', err.message);
+      //     }
+      //   });
     }]
   ]),
 
@@ -402,85 +435,18 @@ const apiData = {
 
   "last": 0
 }; Object.seal(apiData);
-/*
-function updateStations(stations) {
-  for(let station of stations) {
-    apiData.stations.set(station.id,
-      {
-        "name": station.name,
-        "location" : [
-          station.location.latitude,
-          station.location.longitude
-        ]
-      }
-    );
-  }
-}
-
-function updateRegions(regions) {
-  for(let region of regions) {
-    apiData.regions.set(region.name,
-      {
-        "location" : [
-          region.labelLocation.latitude,
-          region.labelLocation.longitude
-        ]
-      }
-    );
-  }
-}
-
-function updateNeighbourhoods(regions) {
-  for(let region of regions) {
-    apiData.neighbourhoods.set(region.name,
-      {
-        "location" : [
-          region.label_location.latitude,
-          region.label_location.longitude
-        ]
-      }
-    )
-  }
-}
-
-function startAllUpdateIntervals() {
-  
-}
-*/
-const ENUM_RAINFALL_CATERGORY = {
-  "none": 0,
-  "light": 1,
-  "moderate": 2,
-  "heavy": 3,
-  "violent": 4
-};
-Object.freeze(ENUM_RAINFALL_CATERGORY);
 
 // Rain Catergories
 // https://en.wikipedia.org/wiki/Rain#Intensity
 function getRainfallCatergory(MmPer5min) {
-  if (MmPer5min === 0) return ENUM_RAINFALL_CATERGORY.none;
+  if (MmPer5min === 0) return "No";
 
   const rainRate = MmPer5min * 12.0; // Get mm/hr
-  if (rainRate < 2.5) return ENUM_RAINFALL_CATERGORY.light;
-  if (rainRate < 10.0) return ENUM_RAINFALL_CATERGORY.moderate;
-  if (rainRate < 50.0) return ENUM_RAINFALL_CATERGORY.heavy;
-  return ENUM_RAINFALL_CATERGORY.violent;
+  if (rainRate < 2.5) return "Light";
+  if (rainRate < 10.0) return "Moderate";
+  if (rainRate < 50.0) return "Heavy";
+  return "Violent";
 }
-
-
-/*
-function assigningValues () {
-  return;
-
-  apiData.rainfall.reading = rainfallResponse.data.data.readings[0].data;
-  apiData.rainfall.stations = rainfallResponse.data.data.stations;
-
-  apiData.uvi = uviResponse.data.data.records[0].index[0].value;
-}
-*/
-
-//getApiData();
 
 /*
 //  =================== Local Database Logic ==========================

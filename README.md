@@ -70,3 +70,11 @@ Data Vis
 
 ## change color w/o sass
 https://medium.com/@Hermanhasawish/how-i-repainted-bootstrap-without-sass-d789f41aa74b
+
+## To-Do
+ - 4D forecast
+ - 2H forecast
+ - psi
+ - uvi
+ - pm25
+ - ui functionality
