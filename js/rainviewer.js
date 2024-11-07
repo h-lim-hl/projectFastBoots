@@ -22,7 +22,7 @@ const rainviewerOptions = {
   "opacity" : 0.4
 };
 
-function getRainlayer() { 
+function getRainlayerUrl() { 
   return `${rainviewerApiObj.host}` + 
          `${rainviewerApiObj.radar.nowcast[0].path}/` +
          `${RAIN_VIEWER_API.highRes}/{z}/{x}/{y}/` + 

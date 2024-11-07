@@ -107,7 +107,10 @@ function addRainviewerLayer() {
   }
 
   rainviewerLayer = L.tileLayer(
-    getRainlayer(), {"opacity" : rainviewerOptions.opacity});
+    getRainlayerUrl(), {
+      "opacity" : rainviewerOptions.opacity,
+      "zIndex" : 2
+    });
   
   rainviewerControl = L.control({position : 'topleft'});
   rainviewerControl.onAdd = () => {
