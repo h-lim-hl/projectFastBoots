@@ -42,7 +42,7 @@ document.addEventListener("rainfallUpdated", ()=>{
 });
 
 document.addEventListener("psiUpdated", ()=>{
-  if(psiUpdated) refreshPsiLayer();
+  if(state.psi) refreshPsiLayer();
 });
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API/Using_the_Geolocation_API
