@@ -31,7 +31,7 @@ function getRainlayerUrl() {
 
 // updates every 10mins
 async function getRainViewerApiConfig() {
-  axios.get(RAIN_VIEWER_API.apiJson)
+  await axios.get(RAIN_VIEWER_API.apiJson)
     .then((response) => {
       //console.log(`getRainViewerApiConfig(): Success`);
       //console.log(response.data);

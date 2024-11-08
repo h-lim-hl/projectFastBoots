@@ -8,9 +8,8 @@ const rainfallUpdated = new CustomEvent(`rainfallUpdated`);
 const forecast2hUpdated = new CustomEvent(`forecast2hUpdated`);
 const uviUpdated = new CustomEvent(`uviUpdated`);
 const psiUpdated = new CustomEvent(`psiUpdated`);
-const pm25Updated = new CustomEvent(`pm25Updated`);
+//const pm25Updated = new CustomEvent(`pm25Updated`);
 const forecast4dUpdated = new CustomEvent(`forecast4dUpdated`);
-
 
 const OPEN_DATA_API = {
   "url": {
@@ -236,7 +235,7 @@ const OPEN_DATA_API = {
 
     ["1H", async function (updateRegions = false) {
       const requests = [
-        axios.get(OPEN_DATA_API.url.RT60_PM25),
+        //axios.get(OPEN_DATA_API.url.RT60_PM25),
         axios.get(OPEN_DATA_API.url.RT60_PSI),
         axios.get(OPEN_DATA_API.url.RT60_UVI)
       ];
@@ -246,16 +245,16 @@ const OPEN_DATA_API = {
         if (res.status === "fulfilled") {
           let data = res.value.data.data;
           switch (i) {
+            // case 0:
+            //   if(updateRegions) {
+            //     OPEN_DATA_API.updateRegions(data.regionMetadata);
+            //   }
+            //   apiData.pm25.lastUpdate = 
+            //     new Date( data.items[0].updatedTimestamp);
+            //   apiData.pm25.data = data.items[0].readings.pm25_one_hourly;
+            //   apiData.pm25.error = false;
+            //   break;
             case 0:
-              if(updateRegions) {
-                OPEN_DATA_API.updateRegions(data.regionMetadata);
-              }
-              apiData.pm25.lastUpdate = 
-                new Date( data.items[0].updatedTimestamp);
-              apiData.pm25.data = data.items[0].readings.pm25_one_hourly;
-              apiData.pm25.error = false;
-              break;
-            case 1:
               if(updateRegions) {
                 OPEN_DATA_API.updateRegions(data.regionMetadata);
               }
@@ -264,7 +263,7 @@ const OPEN_DATA_API = {
               apiData.psi.data = data.items[0].readings;
               apiData.psi.error = false;
               break;
-            case 2:
+            case 1:
               apiData.uvi.lastUpdate =
                 new Date( data.records[0].updatedTimestamp );
               apiData.uvi.data = data.records[0].index;
@@ -275,15 +274,15 @@ const OPEN_DATA_API = {
           }
         } else {
           switch (i) {
+            // case 0:
+            //   console.error("pm25Update Error: ", res.reason);
+            //   apiData.pm25.error = true;
+            //   break;
             case 0:
-              console.error("pm25Update Error: ", res.reason);
-              apiData.pm25.error = true;
-              break;
-            case 1:
               console.error("psi5Update Error: ", res.reason);
               apiData.psi.error = true;
               break;
-            case 2:
+            case 1:
               console.error("uviUpdate Error: ", res.reason);
               apiData.uvi.error = true;
               break;
@@ -291,7 +290,7 @@ const OPEN_DATA_API = {
               console.error(`Unhandled response[${i}]:\n${res}`);
           }
         }
-        document.dispatchEvent(pm25Updated);
+        //document.dispatchEvent(pm25Updated);
         document.dispatchEvent(psiUpdated);
         document.dispatchEvent(uviUpdated);
       });
@@ -304,32 +303,27 @@ const OPEN_DATA_API = {
       
       const responses = await Promise.allSettled(requests);
       responses.forEach((res, i) => {
-        let data = res.value.data.data;
         if(res.status === "fulfilled") {
-
+          let data = res.value.data.data;
+          switch(i) {
+            case 0:
+              apiData.outlook4D.forecast = data.records[0].forecasts;
+              apiData.outlook4D.error = false;
+              break;
+            default:
+              console.error(`Unhandled response[${i}]:\n${res}`);
+          }
         } else {
-
+          switch(i) {
+            case 0:
+              console.error("outlook4D Error: ", res.reason);
+              apiData.outlook4D.error = true;
+              break;
+            default:
+              console.error(`Unhandled response[${i}]:\n${res}`);
+          }
         }
       });
-
-      // await axios.all(endpoints.map((endpoint) => axios.get(endpoint)))
-      //   .then(axios.spread((forecast4D) => {
-      //     apiData.outlook4D.lastUpdated = new Date(
-      //       forecast4D.data.data.records[0].updatedTimestamp
-      //     );
-      //     apiData.outlook4D.forecast = forecast4D.data.data.records[0].forecasts;
-      //     apiData.outlook4D.error = true;
-      //   }))
-      //   .catch((err) => {
-      //     if (err.response) {
-      //       console.error(`Error in request to ${err.config.url}:`, err.response.data);
-      //       if (err.config.url === OPEN_DATA_API.url.RT12H_4D_Forecast) {
-      //         apiData.outlook4D.error = true;
-      //       }
-      //     } else {
-      //       console.error('Request failed:', err.message);
-      //     }
-      //   });
     }]
   ]),
 
@@ -446,6 +440,24 @@ function getRainfallCatergory(MmPer5min) {
   if (rainRate < 10.0) return "Moderate";
   if (rainRate < 50.0) return "Heavy";
   return "Violent";
+}
+
+function getSubindexDangerLvl(value) {
+  if(value <= 50) return 0;
+  if(value <= 100) return 1;
+  if(value <= 150) return 2;
+  if(value <= 200) return 3;
+  return 4;
+}
+
+// TO COMPLETE
+function getBootstrapIconFromForecast(forecast) {
+  const forecastIconMap = new Map([
+    ["Fair", "bi-sun"],
+    ["Fair (Day)", "bi-sun"],
+    ["Fair (Night)", "bi-moon"],
+    []
+  ]);
 }
 
 /*

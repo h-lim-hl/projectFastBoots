@@ -1,8 +1,48 @@
 let geolocationEnabled = false;
 
+const state = {
+  //region info
+  psi: false,
+  //town info
+  temperature: false,
+  wind : false,
+  forecast2h: false,
+  rainfall:false,
+  //overlays
+  rainviewer : false,
+};
+
 document.addEventListener("DOMContentLoaded", () =>{
   OPEN_DATA_API.startAllUpdateIntervals();
   console.log("DOM Loaded");
+});
+
+document.addEventListener("rainviewerApiUpdated", () => {
+  if(state.rainviewer) refreshRainviewerLayer();
+});
+
+document.addEventListener("relativeHumidityUpdated", ()=> {
+  if(state.temperature) refreshTemperatureLayer();
+});
+
+document.addEventListener("airTemperatureUpdated", ()=> {
+  if(state.temperature) refreshTemperatureLayer();
+});
+
+document.addEventListener("windSpeedUpdated", ()=>{
+  if(state.wind) refreshWindLayer();
+});
+
+document.addEventListener("windDirectionUpdated", ()=>{
+  if(state.wind) refreshWindLayer();
+});
+
+document.addEventListener("rainfallUpdated", ()=>{
+  if(state.rainfall) refreshRainfallLayer();
+});
+
+document.addEventListener("psiUpdated", ()=>{
+  if(psiUpdated) refreshPsiLayer();
 });
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API/Using_the_Geolocation_API

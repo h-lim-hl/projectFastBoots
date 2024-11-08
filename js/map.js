@@ -7,28 +7,28 @@ const MAP_MIN_ZOOM = 10;
 const MAP_MAX_ZOON = 20;
 
 let map = L.map('map',
-   {
-    "minZoom" : MAP_MIN_ZOOM + 1,
+  {
+    "minZoom": MAP_MIN_ZOOM + 1,
     "maxZoom": MAP_MAX_ZOON - 1,
-    "zoomControl" : false
-   }).setView(SINGAPORE_LATLONG, 13);
+    "zoomControl": false
+  }).setView(SINGAPORE_LATLONG, 13);
 
 const BASE_MAPS = {
-  "OpenStreetMap" : L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  "OpenStreetMap": L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
       detectRetina: true,
       maxZoom: MAP_MAX_ZOON,
       minZoom: MAP_MIN_ZOOM,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }),
-  "OpenStreetMap.HOT" : L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+  "OpenStreetMap.HOT": L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
     {
       detectRetina: true,
       maxZoom: MAP_MAX_ZOON,
       minZoom: MAP_MIN_ZOOM,
       attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'
     }),
-  "OneMapSG" : L.tileLayer('https://www.onemap.gov.sg/maps/tiles/Default_HD/{z}/{x}/{y}.png',
+  "OneMapSG": L.tileLayer('https://www.onemap.gov.sg/maps/tiles/Default_HD/{z}/{x}/{y}.png',
     {
       detectRetina: true,
       maxZoom: MAP_MAX_ZOON,
@@ -41,20 +41,20 @@ const BASE_MAPS = {
 // NEEDS CHECKING
 function getHeatIndex(deg, rh, isFahrenheit = false) {
   let c;
-  if(isFahrenheit) {
-    c = [-42.379, 2.04901523, 10.14344127, 
-      -0.22475541, -6.83783e-3, -5.481717e-2,
-      1.22874e-3, 8.5282e-4,-1.99e-6
+  if (isFahrenheit) {
+    c = [-42.379, 2.04901523, 10.14344127,
+    -0.22475541, -6.83783e-3, -5.481717e-2,
+      1.22874e-3, 8.5282e-4, -1.99e-6
     ];
   } else {
-    c = [-8.78469475556, 1.61139411, 2.33854883889, 
-      -0.14611605, -0.012308094, -0.0164248277778,
+    c = [-8.78469475556, 1.61139411, 2.33854883889,
+    -0.14611605, -0.012308094, -0.0164248277778,
       2.221732e-3, 7.2546e-4, -3.582e-6
     ];
   }
-  let ret = c[0] + c[1]*deg + c[2]*rh +
-  c[3]*deg*rh + c[4]*deg*deg + c[5]*rh*rh +
-  c[6]*deg*deg*rh + c[7]*deg*rh*rh + c[8]*deg*deg*rh*rh;
+  let ret = c[0] + c[1] * deg + c[2] * rh +
+    c[3] * deg * rh + c[4] * deg * deg + c[5] * rh * rh +
+    c[6] * deg * deg * rh + c[7] * deg * rh * rh + c[8] * deg * deg * rh * rh;
   return ret;
 }
 
@@ -68,14 +68,14 @@ BASE_MAPS.OpenStreetMap.addTo(map);
 let mapScale = undefined;
 function addScale(maxWidth, isMetric) {
   mapScale = L.control.scale({
-    "maxWidth" : maxWidth, "metric" : isMetric, "imperial" : !isMetric,
-    "position" : "bottomright"
+    "maxWidth": maxWidth, "metric": isMetric, "imperial": !isMetric,
+    "position": "bottomright"
   });
   mapScale.addTo(map);
 }
 
 function removeScale() {
-  if(mapScale == undefined) return;
+  if (mapScale == undefined) return;
   map.removeControl(mapScale);
   mapScale = undefined;
 }
@@ -93,41 +93,51 @@ let rainviewerControl = undefined;
 // let rainviewerColorScheme = Object.values(colorSchemeToCssClass)[1];
 
 function removeRainviewerLayer() {
-  if(rainviewerLayer === undefined) return;
+  if (rainviewerLayer === undefined) return;
   map.removeLayer(rainviewerLayer);
-  map.removeControl(rainviewerControl);
-  rainviewerControl = undefined;
   rainviewerLayer = undefined;
 }
 
 function addRainviewerLayer() {
-  if(rainviewerApiObj === undefined) {
+  if (rainviewerApiObj === undefined) {
     console.error(`rainviewerApiObj is undefined!`);
     return;
   }
 
   rainviewerLayer = L.tileLayer(
     getRainlayerUrl(), {
-      "opacity" : rainviewerOptions.opacity,
-      "zIndex" : 2
-    });
-  
-  rainviewerControl = L.control({position : 'topleft'});
+    "opacity": rainviewerOptions.opacity,
+    "zIndex": 20
+  });
+
+  map.addLayer(rainviewerLayer);
+}
+
+function addRainviewerControl() {
+  rainviewerControl = L.control({ position: 'topleft' });
   rainviewerControl.onAdd = () => {
     let legend = L.DomUtil.create('div');
     legend.innerHTML += getRainviewerLegend(Object.values(colorSchemeToCssClass)[rainviewerOptions.color]);
     return legend;
   };
-  
-  map.addLayer(rainviewerLayer);
   rainviewerControl.addTo(map);
 }
 
-document.addEventListener("rainviewerApiUpdated", () => {
-  removeRainviewerLayer();
+function removeRainviewerControl() {
+  map.removeControl(rainviewerControl);
+  rainviewerControl = undefined;
+}
+
+function refreshRainviewerLayer(refreshControl = false) {
+  if (refreshControl) {
+    removeRainviewerControl();
+    addRainviewerControl();
+  }
+  removeRainfallLayer()
   addRainviewerLayer();
-  console.log("displayRainviewer");
-});
+}
+
+
 
 // =============== leaflet markers
 
@@ -149,9 +159,9 @@ function getDivIconSize(divIconHtml) {
 // =============== leaflet Neighbourhood Markers
 let townLayer = undefined;
 
-function getTownMarker (name) {
+function getTownMarker(name) {
   const html =
-  `
+    `
     <div>
       <div class="d-flex flex-column align-items-center" style="width: 80px; border-radius: 5%; font-size: small; background-color: ghostwhite; opacity: 0.8;">
         <div class="align-middle">
@@ -160,35 +170,36 @@ function getTownMarker (name) {
           </div>
         </div>
         <div class="align-middle" style="margin-bottom: 3px; text-align: center">
-          <b><u>${name?name:"Unnamed"}</u></b>
+          <b><u>${name ? name : "Unnamed"}</u></b>
         </div>
       </div>
     </div>
   `;
   const iconSize = getDivIconSize(html);
   return L.divIcon({
-    "className" : "",
-    "html" : html,
-    "iconSize" : iconSize,
-    "iconAnchor" : [iconSize[0]*0.5, iconSize[1]*0.5]
+    "className": "",
+    "html": html,
+    "iconSize": iconSize,
+    "iconAnchor": [iconSize[0] * 0.5, iconSize[1] * 0.5]
   });
 }
 
 function getTownLayer() {
   let divTownGrp = new L.MarkerClusterGroup({
-    "iconCreateFunction" : (cluster) => {
+    "iconCreateFunction": (cluster) => {
       console.log(cluster);
       return getTownMarker(cluster.getChildCount(), 30);
     }
   });
-  for(let o of apiData.neighbourhoods.entries()) {
+
+  for (let o of apiData.neighbourhoods.entries()) {
     const icon = getTownMarker(o[0])
-    L.marker(o[1].location, {"icon": icon}).addTo(divTownGrp);
+    L.marker(o[1].location, { "icon": icon }).addTo(divTownGrp);
   }
   return divTownGrp;
 }
 
-function addTownLayer () {
+function addTownLayer() {
   townLayer = getTownLayer();
   map.addLayer(townLayer);
 }
@@ -209,7 +220,7 @@ let temperatureLayer = undefined;
 function getTemperatureMarker(name, data) {
   const heatIndex = HELPER.sigFig(getHeatIndex(data.temp, data.rh), 1);
   const html =
-  `
+    `
     <div class="d-flex flex-column align-items-center"
       style="width: 80px; border-radius: 5%; font-size: small; background-color: ghostwhite; opacity: 0.8">
       <div class="align-middle">
@@ -219,17 +230,17 @@ function getTemperatureMarker(name, data) {
         </div>
       </div>
       <div class="align-middle" style="text-align: center">
-        <b><u>${name?name:"Unnamed"}</u></b>
+        <b><u>${name ? name : "Unnamed"}</u></b>
       </div>
       <div class="align-middle" style="margin-bottom: 8px;">
         <table>
           <tr>
             <td style="text-align: right;">Temp:</td>
-            <td>${data.temp?data.temp:"NaN "}&degc</td>
+            <td>${data.temp ? data.temp : "NaN "}&degc</td>
           </tr>
           <tr>
             <td style="text-align: right;">RH:</td>
-            <td>${data.rh?data.rh:"NaN "}%</td>
+            <td>${data.rh ? data.rh : "NaN "}%</td>
           </tr>
           <tr>
             <td style="text-align: right;">Feels:</td>
@@ -242,10 +253,10 @@ function getTemperatureMarker(name, data) {
 
   const iconSize = getDivIconSize(html);
   return L.divIcon({
-    "className" : "",
-    "html" : `${html}`,
-    "iconSize" : iconSize,
-    "iconAnchor" : [iconSize[0]*0.5, iconSize[1]*0.5]
+    "className": "",
+    "html": `${html}`,
+    "iconSize": iconSize,
+    "iconAnchor": [iconSize[0] * 0.5, iconSize[1] * 0.5]
   });
 }
 
@@ -253,15 +264,15 @@ function getTemperatureLayer() {
   let divTemperatureLayer = new L.layerGroup();
   let data = {};
 
-  for( let o of apiData.airTemp.data) {
+  for (let o of apiData.airTemp.data) {
     data[o.stationId] ??= {};
     data[o.stationId]["temp"] = o.value;
   }
-  for(let o of apiData.relativeHumidity.data) {
+  for (let o of apiData.relativeHumidity.data) {
     data[o.stationId] ??= {};
     data[o.stationId]["rh"] = o.value;
   }
-  for(let o of Object.keys(data)) {
+  for (let o of Object.keys(data)) {
     const station = apiData.stations.get(o);
     let name, location;
     if (!station) { name = ""; location = [0, 0]; }
@@ -270,9 +281,9 @@ function getTemperatureLayer() {
     data[o]["location"] = location;
   }
 
-  for(let o of Object.entries(data)) {
-    const icon = getTemperatureMarker(o[1].name, {"temp" : o[1].temp, "rh" : o[1].rh})
-    L.marker(o[1].location, {"icon": icon}).addTo(divTemperatureLayer);
+  for (let o of Object.entries(data)) {
+    const icon = getTemperatureMarker(o[1].name, { "temp": o[1].temp, "rh": o[1].rh })
+    L.marker(o[1].location, { "icon": icon }).addTo(divTemperatureLayer);
   }
 
   return divTemperatureLayer;
@@ -297,7 +308,7 @@ function refreshTemperatureLayer() {
 let windLayer = undefined;
 
 function getWindIcon(name, data) {
-  const html =`
+  const html = `
     <div>
       <div class="d-flex flex-column align-items-center" style="width: 80px; border-radius: 5%; font-size: small; background-color: ghostwhite; opacity:0.8">
         <div class="align-middle">
@@ -306,20 +317,20 @@ function getWindIcon(name, data) {
           </div>
         </div>
         <div class="align-middle" style="text-align: center">
-          <b><u>${name?name:"Unnamed"}</u></b>
+          <b><u>${name ? name : "Unnamed"}</u></b>
         </div>
-        <div style="transform: rotate(${data.windDir?data.windDir+180:0}deg); margin-bottom: -3px;">
-          <i class="bi ${data.windDir?"bi-arrow-up-circle":"bi-exclamation-octagon-fill text-danger"}" style="font-size: 1.25rem;"></i>
+        <div style="transform: rotate(${data.windDir ? data.windDir + 180 : 0}deg); margin-bottom: -3px;">
+          <i class="bi ${data.windDir ? "bi-arrow-up-circle" : "bi-exclamation-octagon-fill text-danger"}" style="font-size: 1.25rem;"></i>
         </div>
         <div style="margin-bottom: 8px;">
           <table style="font-size: .76rem;">
             <tr>
               <td style="text-align: right;">Bearing:</td>
-              <td>${data.windDir?data.windDir:"NaN "}&deg</td>
+              <td>${data.windDir ? data.windDir : "NaN "}&deg</td>
             </tr>
             <tr>
               <td style="text-align: right;">Speed:</td>
-              <td>${data.windSpd?data.windSpd:"NaN "}kn</td>
+              <td>${data.windSpd ? data.windSpd : "NaN "}kn</td>
             </tr>
           </table>
         </div>
@@ -328,28 +339,28 @@ function getWindIcon(name, data) {
   `;
   const iconSize = getDivIconSize(html);
   return L.divIcon({
-      "className":"",
-      "html":html,
-      "iconSize" : iconSize,
-      "iconAnchor" : [iconSize[0]*0.5, iconSize[1]*0.5]
-    });
+    "className": "",
+    "html": html,
+    "iconSize": iconSize,
+    "iconAnchor": [iconSize[0] * 0.5, iconSize[1] * 0.5]
+  });
 }
 
 function getWindLayer() {
   let divWindLayer = new L.layerGroup();
   let data = {};
 
-  for(let o of apiData.windDirection.data) {
+  for (let o of apiData.windDirection.data) {
     data[o.stationId] ??= {};
     data[o.stationId]["windDir"] = o.value;
   }
 
-  for(let o of apiData.windSpeed.data) {
+  for (let o of apiData.windSpeed.data) {
     data[o.stationId] ??= {};
     data[o.stationId]["windSpd"] = o.value;
   }
 
-  for(let o of Object.keys(data)) {
+  for (let o of Object.keys(data)) {
     const station = apiData.stations.get(o);
     let name, location;
     if (!station) { name = ""; location = [0, 0]; }
@@ -358,9 +369,9 @@ function getWindLayer() {
     data[o]["location"] = location;
   }
 
-  for(let o of Object.entries(data)) {
-    const icon = getWindIcon(o[1].name, {"windDir": o[1].windDir, "windSpd": o[1].windSpd});
-    L.marker(o[1].location, {"icon": icon}).addTo(divWindLayer);
+  for (let o of Object.entries(data)) {
+    const icon = getWindIcon(o[1].name, { "windDir": o[1].windDir, "windSpd": o[1].windSpd });
+    L.marker(o[1].location, { "icon": icon }).addTo(divWindLayer);
   }
 
   return divWindLayer;
@@ -415,23 +426,70 @@ function getRainfallIcon(name, data) {
   `;
   const iconSize = getDivIconSize(html);
   return L.divIcon({
-      "className":"",
-      "html":html,
-      "iconSize" : iconSize,
-      "iconAnchor" : [iconSize[0]*0.5, iconSize[1]*0.5]
-    });
+    "className": "",
+    "html": html,
+    "iconSize": iconSize,
+    "iconAnchor": [iconSize[0] * 0.5, iconSize[1] * 0.5]
+  });
 }
 
+
 function getRainfallLayer() {
-  let divRainfallLayer = new L.layerGroup();
+  let divRainfallLayer = new L.markerClusterGroup({
+    "iconCreateFunction": function (cluster) {
+      let totalMmPer5min = 0;
+
+      cluster.getAllChildMarkers().forEach((marker) => {
+        totalMmPer5min += marker.value;
+      });
+
+      const html = `
+          <div>
+            <div class="d-flex flex-column align-items-center" style="width: 80px; border-radius: 5%; font-size: small; background-color: ghostwhite; opacity:0.8">
+              <div class="align-middle">
+                <div style="background-color: white; border-radius: 50%; height: 24px; width: 24px; border-width: 1px; border-color: black; border-style: solid; margin-top: 5px;">
+                  <img class="mapTownIcon" src="images/raindrop-drop.svg" style="height: 18px; width: 18px; margin: 0 0 0.5pt 1.5pt;">
+                </div>
+              </div>
+              <div class="align-middle text-center">
+                <b><u>*${cluster.getChildCount()}*</u></b>
+              </div>
+              <div class="align-middle text-center">
+                ${getRainfallCatergory(totalMmPer5min)}
+              </div>
+              <div class="align-middle text-center">
+                Rainfall:
+              </div>
+              <div style="margin-bottom: 8px;">
+                <table style="font-size: .76rem;">
+                  <tr>
+                    <td>${HELPER.sigFig(totalMmPer5min, 1)}</td>
+                    <td style="font-size: smaller; text-align:left; vertical-align:bottom;">mm/min</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        `;
+
+      const iconSize = getDivIconSize(html);
+      return L.divIcon({
+        "className": "",
+        "html": html,
+        "iconSize": iconSize,
+        "iconAnchor": [iconSize[0] * 0.5, iconSize[1] * 0.5]
+      });
+    }
+  });
+
   let data = {};
 
-  for(let o of apiData.rainfall.data) {
+  for (let o of apiData.rainfall.data) {
     data[o.stationId] ??= {};
     data[o.stationId]["mmPer5min"] = o.value;
   }
 
-  for(let o of Object.keys(data)) {
+  for (let o of Object.keys(data)) {
     const station = apiData.stations.get(o);
     let name, location;
     if (!station) { name = ""; location = [0, 0]; }
@@ -440,9 +498,11 @@ function getRainfallLayer() {
     data[o]["location"] = location;
   }
 
-  for(let o of Object.entries(data)) {
-    const icon = getRainfallIcon(o[1].name, {"mmPer5min": o[1].mmPer5min});
-    L.marker(o[1].location, {"icon": icon}).addTo(divRainfallLayer);
+  for (let o of Object.entries(data)) {
+    const icon = getRainfallIcon(o[1].name, { "mmPer5min": o[1].mmPer5min });
+    let marker = L.marker(o[1].location, { "icon": icon });
+    marker.value = o[1].mmPer5min;
+    marker.addTo(divRainfallLayer);
   }
 
   return divRainfallLayer;

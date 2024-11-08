@@ -74,7 +74,35 @@ https://medium.com/@Hermanhasawish/how-i-repainted-bootstrap-without-sass-d789f4
 ## To-Do
  - 4D forecast
  - 2H forecast
- - psi
  - uvi
+
+
+ - To Complete before Sat
+ - psi
  - pm25
  - ui functionality
+ - click or hover z-reorder marker
+
+ - "Fair", // sun
+ - "Fair (Day)", // sun
+ - "Fair (Night)", // moon
+ - "Fair and Warm", // sun-fill
+ - "Partly Cloudy", //cloud
+ - "Partly Cloudy (Day)", // cloud-sun
+ - "Partly Cloudy (Night)", // cloud-moon
+ - "Cloudy", // clouds-fill
+ - "Hazy", // cloud-haze-fill
+ - "Slightly Hazy", // cloud-haze
+ - "Windy", // wind
+ - "Mist", // cloud-fog
+ - "Fog", // cloud-fog-fill
+ - "Light Rain", // cloud-drizzle-fill
+ - "Moderate Rain", // cloud-rain-fill
+ - "Heavy Rain", // cloud-rain-heavy-fill
+ - "Passing Showers", //
+ - "Light Showers", // cloud-drizzle
+ - "Showers", // cloud-rain
+ - "Heavy Showers", //cloud-rain-heavy
+ - "Thundery Showers",
+ - "Heavy Thundery Showers",
+ - "Heavy Thundery Showers with Gusty Winds"
