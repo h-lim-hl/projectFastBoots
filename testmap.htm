@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Layer Control Test</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <style>
+        /* Make sure the map has a defined height */
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <h3>Leaflet Layer Control Test</h3>
+    <div id="map"></div> <!-- The map will be rendered here -->
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Set zoom limits
+        const MAP_MAX_ZOOM = 19;
+        const MAP_MIN_ZOOM = 3;
+
+        // Define base maps
+        const BASE_MAPS = {
+            "OpenStreetMap": L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                detectRetina: true,
+                maxZoom: MAP_MAX_ZOOM,
+                minZoom: MAP_MIN_ZOOM,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }),
+            "OpenStreetMap.HOT": L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+                detectRetina: true,
+                maxZoom: MAP_MAX_ZOOM,
+                minZoom: MAP_MIN_ZOOM,
+                attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'
+            })
+        };
+
+        // Initialize the map
+        const map = L.map('map', {
+            center: [51.505, -0.09],  // Starting coordinates
+            zoom: 13,                 // Initial zoom level
+            layers: [BASE_MAPS.OpenStreetMap] // Default layer to show
+        });
+
+        // Add the layer control to the map (this will let you toggle between the base maps)
+        const layerControl = L.control.layers(BASE_MAPS, {}).addTo(map);
+
+        // Optional: Log layer change events (just to make sure they are being triggered)
+        map.on('layeradd', function(e) {
+            console.log("Layer added:", e.layer._url);
+        });
+
+        map.on('layerremove', function(e) {
+            console.log("Layer removed:", e.layer._url);
+        });
+
+        // Add a small marker to test interaction (optional)
+        L.marker([51.505, -0.09]).addTo(map)
+            .bindPopup("This is a test marker!")
+            .openPopup();
+    </script>
+
+</body>
+</html>

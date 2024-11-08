@@ -12,9 +12,113 @@ const state = {
   rainviewer : false,
 };
 
+function updateMapDisplayLayers(){
+  if(state.psi) {}
+  else {}
+  
+  if(state.temperature) addTemperatureLayer();
+  else removeTemperatureLayer();
+
+  if(state.wind) addWindLayer();
+  else removeWindLayer();
+
+  if(state.forecast2h) {}
+  else {}
+
+  if(state.rainfall) addRainfallLayer();
+  else removeRainfallLayer();
+
+  if(state.rainviewer) {
+    addRainviewerLayer();
+    addRainviewerControl();
+  } else {
+    removeRainviewerControl();
+    removeRainviewerLayer();
+  }
+};
+
+
+const FORECAST_2D_BTN = document.querySelector("#forecast2h-btn");
+FORECAST_2D_BTN.addEventListener("click", ()=>{});
+
+const PSI_BTN = document.querySelector("#psi-btn");
+PSI_BTN.addEventListener("click", ()=>{});
+
+const RAINFALL_BTN = document.querySelector("#rainfall-btn");
+RAINFALL_BTN.addEventListener("click", ()=>{
+  state.rainfall = true;
+  state.psi = state.temperature = state.wind = state.forecast2h = false;
+  updateMapDisplayLayers();
+});
+
+const WIND_BTN = document.querySelector("#wind-btn");
+WIND_BTN.addEventListener("click", ()=>{
+  state.wind = true;
+  state.psi = state.temperature = state.forecast2h = state.rainfall = false;
+  updateMapDisplayLayers();
+});
+
+const TEMPERATURE_BTN = document.querySelector("#temperature-btn");
+TEMPERATURE_BTN.addEventListener("click", ()=>{
+  state.temperature = true;
+  state.psi = state.wind = state.forecast2h = state.rainfall = false;
+  updateMapDisplayLayers();
+});
+
+const RAINVIEWER_TOGGLE = document.querySelector("#rainviewer-toggle");
+RAINVIEWER_TOGGLE.addEventListener("click", ()=>{
+  state.rainviewer = !state.rainviewer;
+  updateMapDisplayLayers();
+});
+
+const RAINVIEWER_COLORS = {
+"RAINVIEWER_COLOR_BW" : document.querySelector("#rainviewer-color-bw-radial"),
+"RAINVIEWER_COLOR_ORI" : document.querySelector("#rainviewer-color-ori-radial"),
+"RAINVIEWER_COLOR_UB" : document.querySelector("#rainviewer-color-ub-radial"),
+"RAINVIEWER_COLOR_TT" : document.querySelector("#rainviewer-color-tt-radial"),
+"RAINVIEWER_COLOR_WC" : document.querySelector("#rainviewer-color-wc-radial"),
+"RAINVIEWER_COLOR_MR" : document.querySelector("#rainviewer-color-mr-radial"),
+"RAINVIEWER_COLOR_RS" : document.querySelector("#rainviewer-color-rs-radial"),
+"RAINVIEWER_COLOR_DS" : document.querySelector("#rainviewer-color-ds-radial")
+};
+Object.freeze(RAINVIEWER_COLORS);
+
+RAINVIEWER_COLORS.RAINVIEWER_COLOR_BW.addEventListener("click", ()=>{
+  rainviewerOptions.color = 0;
+  if(state.rainviewer) refreshRainviewerLayer(true);
+});
+RAINVIEWER_COLORS.RAINVIEWER_COLOR_ORI.addEventListener("click", ()=>{
+  rainviewerOptions.color = 1;
+  if(state.rainviewer) refreshRainviewerLayer(true);
+});
+RAINVIEWER_COLORS.RAINVIEWER_COLOR_UB.addEventListener("click", ()=>{
+  rainviewerOptions.color = 2;
+  if(state.rainviewer) refreshRainviewerLayer(true);
+});
+RAINVIEWER_COLORS.RAINVIEWER_COLOR_TT.addEventListener("click", ()=>{
+  rainviewerOptions.color = 3;
+  if(state.rainviewer) refreshRainviewerLayer(true);
+});
+RAINVIEWER_COLORS.RAINVIEWER_COLOR_WC.addEventListener("click", ()=>{
+  rainviewerOptions.color = 4;
+  if(state.rainviewer) refreshRainviewerLayer(true);
+});
+RAINVIEWER_COLORS.RAINVIEWER_COLOR_MR.addEventListener("click", ()=>{
+  rainviewerOptions.color = 5;
+  if(state.rainviewer) refreshRainviewerLayer(true);
+});
+RAINVIEWER_COLORS.RAINVIEWER_COLOR_RS.addEventListener("click", ()=>{
+  rainviewerOptions.color = 6;
+  if(state.rainviewer) refreshRainviewerLayer(true);
+});
+RAINVIEWER_COLORS.RAINVIEWER_COLOR_DS.addEventListener("click", ()=>{
+  rainviewerOptions.color = 7;
+  if(state.rainviewer) refreshRainviewerLayer(true);
+});
+
+
 document.addEventListener("DOMContentLoaded", () =>{
   OPEN_DATA_API.startAllUpdateIntervals();
-  console.log("DOM Loaded");
 });
 
 document.addEventListener("rainviewerApiUpdated", () => {

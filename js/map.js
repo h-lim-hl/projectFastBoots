@@ -4,12 +4,12 @@ const ONE_MAP_SG = 0x01;
 const OPEN_STREET_MAP = 0x02;
 
 const MAP_MIN_ZOOM = 10;
-const MAP_MAX_ZOON = 20;
+const MAP_MAX_ZOOM = 20;
 
 let map = L.map('map',
   {
     "minZoom": MAP_MIN_ZOOM + 1,
-    "maxZoom": MAP_MAX_ZOON - 1,
+    "maxZoom": MAP_MAX_ZOOM - 1,
     "zoomControl": false
   }).setView(SINGAPORE_LATLONG, 13);
 
@@ -17,52 +17,33 @@ const BASE_MAPS = {
   "OpenStreetMap": L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
       detectRetina: true,
-      maxZoom: MAP_MAX_ZOON,
+      maxZoom: MAP_MAX_ZOOM,
       minZoom: MAP_MIN_ZOOM,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }),
   "OpenStreetMap.HOT": L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
     {
       detectRetina: true,
-      maxZoom: MAP_MAX_ZOON,
+      maxZoom: MAP_MAX_ZOOM,
       minZoom: MAP_MIN_ZOOM,
       attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'
     }),
   "OneMapSG": L.tileLayer('https://www.onemap.gov.sg/maps/tiles/Default_HD/{z}/{x}/{y}.png',
     {
       detectRetina: true,
-      maxZoom: MAP_MAX_ZOON,
+      maxZoom: MAP_MAX_ZOOM,
       minZoom: MAP_MIN_ZOOM,
       /** DO NOT REMOVE the OneMap attribution below **/
       attribution: '<img src="https://www.onemap.gov.sg/web-assets/images/logo/om_logo.png" style="height:20px;width:20px;"/>&nbsp;<a href="https://www.onemap.gov.sg/" target="_blank" rel="noopener noreferrer">OneMap</a>&nbsp;&copy;&nbsp;contributors&nbsp;&#124;&nbsp;<a href="https://www.sla.gov.sg/" target="_blank" rel="noopener noreferrer">Singapore Land Authority</a>'
     })
 };
-// https://en.wikipedia.org/wiki/Heat_index#Formula
-// NEEDS CHECKING
-function getHeatIndex(deg, rh, isFahrenheit = false) {
-  let c;
-  if (isFahrenheit) {
-    c = [-42.379, 2.04901523, 10.14344127,
-    -0.22475541, -6.83783e-3, -5.481717e-2,
-      1.22874e-3, 8.5282e-4, -1.99e-6
-    ];
-  } else {
-    c = [-8.78469475556, 1.61139411, 2.33854883889,
-    -0.14611605, -0.012308094, -0.0164248277778,
-      2.221732e-3, 7.2546e-4, -3.582e-6
-    ];
-  }
-  let ret = c[0] + c[1] * deg + c[2] * rh +
-    c[3] * deg * rh + c[4] * deg * deg + c[5] * rh * rh +
-    c[6] * deg * deg * rh + c[7] * deg * rh * rh + c[8] * deg * deg * rh * rh;
-  return ret;
-}
-
-// Add baselayer control
-let layerControl = L.control.layers(BASE_MAPS).addTo(map);
 
 // Set Default Baselayer
 BASE_MAPS.OpenStreetMap.addTo(map);
+
+// Add baselayer control
+let layerControl = L.control.layers(BASE_MAPS,{}).addTo(map);
+layerControl.getContainer().style.zIndex = 2000;
 
 // Map Scale
 let mapScale = undefined;
@@ -73,6 +54,14 @@ function addScale(maxWidth, isMetric) {
   });
   mapScale.addTo(map);
 }
+
+setTimeout(function() {
+  const firstRadioButton = document.querySelector('.leaflet-control-layers input[type="radio"]');
+  if (firstRadioButton) {
+      console.log('Manually triggering click event!');
+      firstRadioButton.click();
+  }
+}, 1000);
 
 function removeScale() {
   if (mapScale == undefined) return;
@@ -114,6 +103,7 @@ function addRainviewerLayer() {
 }
 
 function addRainviewerControl() {
+  if (rainviewerControl) return;
   rainviewerControl = L.control({ position: 'topleft' });
   rainviewerControl.onAdd = () => {
     let legend = L.DomUtil.create('div');
@@ -124,8 +114,10 @@ function addRainviewerControl() {
 }
 
 function removeRainviewerControl() {
-  map.removeControl(rainviewerControl);
-  rainviewerControl = undefined;
+  if (rainviewerControl) {
+    map.removeControl(rainviewerControl);
+    rainviewerControl = undefined;
+  }
 }
 
 function refreshRainviewerLayer(refreshControl = false) {
@@ -133,7 +125,7 @@ function refreshRainviewerLayer(refreshControl = false) {
     removeRainviewerControl();
     addRainviewerControl();
   }
-  removeRainfallLayer()
+  removeRainviewerLayer()
   addRainviewerLayer();
 }
 
@@ -205,8 +197,10 @@ function addTownLayer() {
 }
 
 function removeTownLayer() {
-  map.removeLayer(townLayer);
-  townLayer = undefined;
+  if (townLayer) {
+    map.removeLayer(townLayer);
+    townLayer = undefined;
+  }
 }
 
 function refreshTownLayer() {
@@ -216,6 +210,26 @@ function refreshTownLayer() {
 
 // =============== leaflet Temperature Markers
 let temperatureLayer = undefined;
+
+// https://en.wikipedia.org/wiki/Heat_index#Formula
+function getHeatIndex(deg, rh, isFahrenheit = false) {
+  let c;
+  if (isFahrenheit) {
+    c = [-42.379, 2.04901523, 10.14344127,
+    -0.22475541, -6.83783e-3, -5.481717e-2,
+      1.22874e-3, 8.5282e-4, -1.99e-6
+    ];
+  } else {
+    c = [-8.78469475556, 1.61139411, 2.33854883889,
+    -0.14611605, -0.012308094, -0.0164248277778,
+      2.221732e-3, 7.2546e-4, -3.582e-6
+    ];
+  }
+  let ret = c[0] + c[1] * deg + c[2] * rh +
+    c[3] * deg * rh + c[4] * deg * deg + c[5] * rh * rh +
+    c[6] * deg * deg * rh + c[7] * deg * rh * rh + c[8] * deg * deg * rh * rh;
+  return ret;
+}
 
 function getTemperatureMarker(name, data) {
   const heatIndex = HELPER.sigFig(getHeatIndex(data.temp, data.rh), 1);
@@ -290,13 +304,16 @@ function getTemperatureLayer() {
 }
 
 function addTemperatureLayer() {
+  if (temperatureLayer) return;
   temperatureLayer = getTemperatureLayer();
   map.addLayer(temperatureLayer);
 }
 
 function removeTemperatureLayer() {
-  map.removeLayer(temperatureLayer);
-  temperatureLayer = undefined;
+  if (temperatureLayer) {
+    map.removeLayer(temperatureLayer);
+    temperatureLayer = undefined;
+  }
 }
 
 function refreshTemperatureLayer() {
@@ -378,13 +395,16 @@ function getWindLayer() {
 }
 
 function addWindLayer() {
+  if (windLayer) return;
   windLayer = getWindLayer();
   map.addLayer(windLayer);
 }
 
 function removeWindLayer() {
-  map.removeLayer(windLayer);
-  windLayer = undefined;
+  if (windLayer) {
+    map.removeLayer(windLayer);
+    windLayer = undefined;
+  }
 }
 
 function refreshWindLayer() {
@@ -432,7 +452,6 @@ function getRainfallIcon(name, data) {
     "iconAnchor": [iconSize[0] * 0.5, iconSize[1] * 0.5]
   });
 }
-
 
 function getRainfallLayer() {
   let divRainfallLayer = new L.markerClusterGroup({
@@ -509,13 +528,16 @@ function getRainfallLayer() {
 }
 
 function addRainfallLayer() {
+  if (rainfallLayer) return;
   rainfallLayer = getRainfallLayer();
   map.addLayer(rainfallLayer);
 }
 
 function removeRainfallLayer() {
-  map.removeLayer(rainfallLayer);
-  rainfallLayer = undefined;
+  if (rainfallLayer) {
+    map.removeLayer(rainfallLayer);
+    rainfallLayer = undefined;
+  }
 }
 
 function refreshRainfallLayer() {
@@ -528,7 +550,7 @@ document.addEventListener("apiDataReady", () => {
   // addTownLayer();
   // addTemperatureLayer();
   // addWindLayer();
-  addRainfallLayer();
+  // addRainfallLayer();
 });
 
 // if(RAIN_VIEWER_API.isReady) {

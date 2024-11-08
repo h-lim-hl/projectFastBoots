@@ -35,8 +35,8 @@
 
             <!-- Forecast -->
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="#"><i
-                  class="bi bi-umbrella-fill nav-icon nav-icon-orange"></i> Current Forecast</a>
+              <a id="forecast2h-btn" class="nav-link" aria-current="page" href="#"><i
+                  class="bi bi-umbrella-fill nav-icon nav-icon-orange" aria-disabled="true"></i> Current Forecast</a>
             </li>
             <!-- Weather Info -->
             <li class="nav-item dropdown">
@@ -46,13 +46,13 @@
                 Weather Info
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">PSI</a></li>
+                <li><a id="psi-btn" class="dropdown-item" href="#">PSI</a></li>
                 <li>
                   <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item" href="#">Rainfall</a></li>
-                <li><a class="dropdown-item" href="#">Wind</a></li>
-                <li><a class="dropdown-item" href="#">Temperature</a></li>
+                <li><a id="rainfall-btn" class="dropdown-item" href="#">Rainfall</a></li>
+                <li><a id="wind-btn" class="dropdown-item" href="#">Wind</a></li>
+                <li><a id="temperature-btn" class="dropdown-item" href="#">Temperature</a></li>
               </ul>
 
               <!-- Rainviewer -->
@@ -63,55 +63,55 @@
               </a>
               <div class="dropdown-menu ps-2 pe-1">
                 <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" id="rainviewerLayerSwitch">
+                  <input id="rainviewer-toggle" class="form-check-input" type="checkbox" role="switch" id="rainviewerLayerSwitch">
                   <label class="form-check-label" for="rainviewerLayerSwitch">Display</label>
                 </div>
                 <hr class="dropdown-divider">
                 <div class="pb-1">Color Schemes</div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor1">
+                  <input id="rainviewer-color-bw-radial" class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor1">
                   <label class="form-check-label font-size-small" for="rainviewerColor1">
                     Black and White
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor2" checked>
+                  <input id="rainviewer-color-ori-radial" class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor2" checked>
                   <label class="form-check-label font-size-small" for="rainviewerColor2">
                     Original
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor3">
+                  <input id="rainviewer-color-ub-radial" class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor3">
                   <label class="form-check-label font-size-small" for="rainviewerColor3">
                     Universal Blue
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor4">
+                  <input id="rainviewer-color-tt-radial" class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor4">
                   <label class="form-check-label font-size-small" for="rainviewerColor4">
                     Titan
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor5">
+                  <input id="rainviewer-color-wc-radial" class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor5">
                   <label class="form-check-label font-size-small" for="rainviewerColor5">
                     The Weather Channel
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor6">
+                  <input id="rainviewer-color-mr-radial" class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor6">
                   <label class="form-check-label font-size-small" for="rainviewerColor6">
                     Meteored
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor7">
+                  <input id="rainviewer-color-rs-radial" class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor7">
                   <label class="form-check-label font-size-small" for="rainviewerColor7">
                     Rainbow @ Selex SI
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor8">
+                  <input id="rainviewer-color-ds-radial" class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor8">
                   <label class="form-check-label font-size-small" for="rainviewerColor8">
                     Dark Sky
                   </label>
@@ -120,14 +120,14 @@
 
               <!-- 4D Forecast -->
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#"><i
-                    class="bi bi-book-half nav-icon nav-icon-grey"></i> 4D Forecast</a>
+                <a id="forecast4d-btn" class="nav-link" aria-current="page" href="#"><i
+                    class="bi bi-book-half nav-icon nav-icon-grey" aria-disabled="true"></i> 4D Forecast</a>
               </li>
 
               <!-- About -->
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#"><i
-                  class="bi bi-question-diamond-fill nav-icon nav-icon-blue"></i> About</a>
+                <a id="about-btn" class="nav-link" aria-current="page" href="#"><i
+                  class="bi bi-question-diamond-fill nav-icon nav-icon-blue" aria-disabled="true"></i> About</a>
               </li>
             </li>
             <!-- Disabled -->
