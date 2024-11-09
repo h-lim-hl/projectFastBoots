@@ -80,6 +80,7 @@ const OPEN_DATA_API = {
 
   "updateApiDataFns": new Map([
     ["1M", async function (updateRegions = false) {
+      // console.log("1M: updating: ", new Date().toLocaleTimeString());
       const requests = [
         axios.get(OPEN_DATA_API.url.RT1_RH),
         axios.get(OPEN_DATA_API.url.RT1_AIR_TEMP),
@@ -160,6 +161,7 @@ const OPEN_DATA_API = {
     }],
 
     ["5M", async function (updateRegions = false) {
+      // console.log("5M: updating: ", new Date().toLocaleTimeString());
       const requests = [
         axios.get(OPEN_DATA_API.url.RT5_RAINFALL)
       ];
@@ -194,6 +196,7 @@ const OPEN_DATA_API = {
     }],
 
     ["30M", async function (updateRegions = false) {
+      // console.log("30M: updating: ", new Date().toLocaleTimeString());
       const requests = [
         axios.get(OPEN_DATA_API.url.RT30_2H_Forecast)
       ];
@@ -234,6 +237,7 @@ const OPEN_DATA_API = {
     }],
 
     ["1H", async function (updateRegions = false) {
+      // console.log("1H: updating: ", new Date().toLocaleTimeString());
       const requests = [
         //axios.get(OPEN_DATA_API.url.RT60_PM25),
         axios.get(OPEN_DATA_API.url.RT60_PSI),
@@ -297,6 +301,7 @@ const OPEN_DATA_API = {
     }],
 
     ["12H", async function (updateRegions = false) {
+      // console.log("12H: updating: ", new Date().toLocaleTimeString());
       const requests = [
         axios.get(OPEN_DATA_API.url.RT12H_4D_Forecast)
       ];
@@ -341,6 +346,7 @@ const OPEN_DATA_API = {
           let intervalNum =
             setInterval(OPEN_DATA_API.updateApiDataFns.get(fnKey), timeout);
           apiData.internals.set(fnKey, intervalNum);
+          return intervalNum;
         };
 
         const updateRainviewer = function (fnKey, timeout) {
@@ -439,7 +445,7 @@ function getRainfallCatergory(MmPer5min) {
   if (rainRate < 2.5) return "Light";
   if (rainRate < 10.0) return "Moderate";
   if (rainRate < 50.0) return "Heavy";
-  return "Violent";
+  return "Torrential";
 }
 
 function getSubindexDangerLvl(value) {
