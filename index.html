@@ -16,7 +16,8 @@
   <title>Clouds SG</title>
 </head>
 
-<body style="background-color: rgb(240, 250, 255);">
+<body>
+  <div style="background-color: rgb(240, 250, 255);">
   <!-- Navbar -->
   <div style="height:3.525rem">
     <nav class="navbar navbar-expand-md bg-body-tertiary" style="position:absolute; width: 100vw">
@@ -36,7 +37,7 @@
             <!-- Forecast -->
             <li class="nav-item">
               <a id="forecast2h-btn" class="nav-link" aria-current="page" href="#"><i
-                  class="bi bi-umbrella-fill nav-icon nav-icon-orange" aria-disabled="true"></i> Current Forecast</a>
+                  class="bi bi-umbrella-fill nav-icon nav-icon-orange" aria-disabled="true"></i> Forecast</a>
             </li>
             <!-- Weather Info -->
             <li class="nav-item dropdown">
@@ -105,6 +106,12 @@
                   </label>
                 </div>
                 <div class="form-check">
+                  <input id="rainviewer-color-nr-radial" class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor6">
+                  <label class="form-check-label font-size-small" for="rainviewerColor6">
+                    Nexrad L3
+                  </label>
+                </div>
+                <div class="form-check">
                   <input id="rainviewer-color-rs-radial" class="form-check-input" type="radio" name="rainviewerColor" id="rainviewerColor7">
                   <label class="form-check-label font-size-small" for="rainviewerColor7">
                     Rainbow @ Selex SI
@@ -123,7 +130,6 @@
                 <a id="forecast4d-btn" class="nav-link" aria-current="page" href="#"><i
                     class="bi bi-book-half nav-icon nav-icon-grey" aria-disabled="true"></i> 4D Forecast</a>
               </li>
-
               <!-- About -->
               <li class="nav-item">
                 <a id="about-btn" class="nav-link" aria-current="page" href="#"><i
@@ -148,14 +154,13 @@
   <div class="container-fluid">
     <div class="row">
       <!-- Leaflet -->
-      <div class="col-1 d-none d-md-block"></div>
-      <div class="col col-sm-11 col-md-10 border border-end-0 content-height" id="map"
+      <div class="col content-height" id="map"
         style="background-color: lightsteelblue;">
       </div>
     </div>
   </div>
-  <footer>
-    <hr>
+</div>
+  <footer style="margin-top: 0.25 rem; border-top: 1pt solid black;">
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"

@@ -117,7 +117,7 @@ function refreshRainviewerLayer(refreshControl = false) {
     removeRainviewerControl();
     addRainviewerControl();
   }
-  removeRainviewerLayer()
+  removeRainviewerLayer();
   addRainviewerLayer();
 }
 
@@ -466,7 +466,7 @@ function getRainfallLayer() {
                 <b><u>*${cluster.getChildCount()}*</u></b>
               </div>
               <div class="align-middle text-center">
-                ${getRainfallCatergory(totalMmPer5min)}
+                ${getRainfallCatergory(totalMmPer5min/cluster.getChildCount())}
               </div>
               <div class="align-middle text-center">
                 Rainfall:
@@ -474,7 +474,7 @@ function getRainfallLayer() {
               <div style="margin-bottom: 8px;">
                 <table style="font-size: .76rem;">
                   <tr>
-                    <td>${HELPER.sigFig(totalMmPer5min, 1)}</td>
+                    <td>${HELPER.sigFig(totalMmPer5min/cluster.getChildCount(), 1)}</td>
                     <td style="font-size: smaller; text-align:left; vertical-align:bottom;">mm/min</td>
                   </tr>
                 </table>

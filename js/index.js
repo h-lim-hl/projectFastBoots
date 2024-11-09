@@ -67,7 +67,12 @@ TEMPERATURE_BTN.addEventListener("click", ()=>{
 
 const RAINVIEWER_TOGGLE = document.querySelector("#rainviewer-toggle");
 RAINVIEWER_TOGGLE.addEventListener("click", ()=>{
-  state.rainviewer = !state.rainviewer;
+  if(RAINVIEWER_TOGGLE.checked) {
+    state.rainviewer = true;
+  }
+  else {
+    state.rainviewer = false;
+  }
   updateMapDisplayLayers();
 });
 
@@ -78,6 +83,7 @@ const RAINVIEWER_COLORS = {
 "RAINVIEWER_COLOR_TT" : document.querySelector("#rainviewer-color-tt-radial"),
 "RAINVIEWER_COLOR_WC" : document.querySelector("#rainviewer-color-wc-radial"),
 "RAINVIEWER_COLOR_MR" : document.querySelector("#rainviewer-color-mr-radial"),
+"RAINVIEWER_COLOR_NR" : document.querySelector("#rainviewer-color-nr-radial"),
 "RAINVIEWER_COLOR_RS" : document.querySelector("#rainviewer-color-rs-radial"),
 "RAINVIEWER_COLOR_DS" : document.querySelector("#rainviewer-color-ds-radial")
 };
@@ -107,12 +113,16 @@ RAINVIEWER_COLORS.RAINVIEWER_COLOR_MR.addEventListener("click", ()=>{
   rainviewerOptions.color = 5;
   if(state.rainviewer) refreshRainviewerLayer(true);
 });
-RAINVIEWER_COLORS.RAINVIEWER_COLOR_RS.addEventListener("click", ()=>{
+RAINVIEWER_COLORS.RAINVIEWER_COLOR_NR.addEventListener("click", ()=>{
   rainviewerOptions.color = 6;
   if(state.rainviewer) refreshRainviewerLayer(true);
 });
-RAINVIEWER_COLORS.RAINVIEWER_COLOR_DS.addEventListener("click", ()=>{
+RAINVIEWER_COLORS.RAINVIEWER_COLOR_RS.addEventListener("click", ()=>{
   rainviewerOptions.color = 7;
+  if(state.rainviewer) refreshRainviewerLayer(true);
+});
+RAINVIEWER_COLORS.RAINVIEWER_COLOR_DS.addEventListener("click", ()=>{
+  rainviewerOptions.color = 8;
   if(state.rainviewer) refreshRainviewerLayer(true);
 });
 
