@@ -55,14 +55,6 @@ function addScale(maxWidth, isMetric) {
   mapScale.addTo(map);
 }
 
-setTimeout(function() {
-  const firstRadioButton = document.querySelector('.leaflet-control-layers input[type="radio"]');
-  if (firstRadioButton) {
-      console.log('Manually triggering click event!');
-      firstRadioButton.click();
-  }
-}, 1000);
-
 function removeScale() {
   if (mapScale == undefined) return;
   map.removeControl(mapScale);
