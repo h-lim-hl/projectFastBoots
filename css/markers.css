@@ -1,0 +1,20 @@
+.psi-warn-icon-setting {
+  vertical-align: 0%;
+  font-size: 1rem;
+}
+
+.psi-elevated-color {
+  color: darkorange
+}
+
+.psi-unhealthy-color {
+  color:darkgoldenrod
+}
+
+.psi-unhealthy2-color {
+  color:firebrick
+}
+
+.psi-hazardous-color {
+  color: darkred
+}

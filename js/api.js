@@ -259,17 +259,17 @@ const OPEN_DATA_API = {
             //   apiData.pm25.error = false;
             //   break;
             case 0:
-              if(updateRegions) {
+              if (updateRegions) {
                 OPEN_DATA_API.updateRegions(data.regionMetadata);
               }
               apiData.psi.lastUpdate =
-                new Date( data.items[0].updatedTimestamp);
+                new Date(data.items[0].updatedTimestamp);
               apiData.psi.data = data.items[0].readings;
               apiData.psi.error = false;
               break;
             case 1:
               apiData.uvi.lastUpdate =
-                new Date( data.records[0].updatedTimestamp );
+                new Date(data.records[0].updatedTimestamp);
               apiData.uvi.data = data.records[0].index;
               apiData.uvi.error = false;
               break;
@@ -305,12 +305,12 @@ const OPEN_DATA_API = {
       const requests = [
         axios.get(OPEN_DATA_API.url.RT12H_4D_Forecast)
       ];
-      
+
       const responses = await Promise.allSettled(requests);
       responses.forEach((res, i) => {
-        if(res.status === "fulfilled") {
+        if (res.status === "fulfilled") {
           let data = res.value.data.data;
-          switch(i) {
+          switch (i) {
             case 0:
               apiData.outlook4D.forecast = data.records[0].forecasts;
               apiData.outlook4D.error = false;
@@ -319,7 +319,7 @@ const OPEN_DATA_API = {
               console.error(`Unhandled response[${i}]:\n${res}`);
           }
         } else {
-          switch(i) {
+          switch (i) {
             case 0:
               console.error("outlook4D Error: ", res.reason);
               apiData.outlook4D.error = true;
@@ -371,56 +371,56 @@ const apiData = {
   "neighbourhoods": new Map(),
 
   "relativeHumidity": {
-    "lastUpdate": new Date(),
+    "lastUpdate": new Date(0),
     "data": [],
     "error": true
   },
 
   "airTemp": {
-    "lastUpdate": new Date(),
+    "lastUpdate": new Date(0),
     "data": [],
     "error": true
   },
 
   "windSpeed": {
-    "lastUpdate": new Date(),
+    "lastUpdate": new Date(0),
     "data": [],
     "error": true
   },
 
   "windDirection": {
-    "lastUpdate": new Date(),
+    "lastUpdate": new Date(0),
     "data": [],
     "error": true
   },
 
   "rainfall": {
-    "lastUpdate": new Date(),
+    "lastUpdate": new Date(0),
     "data": [],
     "error": true
   },
 
   "pm25": {
-    "lastUpdate": new Date(),
+    "lastUpdate": new Date(0),
     "data": {},
     "error": true
   },
 
   "psi": {
-    "lastUpdate": new Date(),
+    "lastUpdate": new Date(0),
     "data": {},
     "error": true
   },
 
   "uvi": {
-    "lastUpdate": new Date(),
+    "lastUpdate": new Date(0),
     "data": [],
     "error": true
   },
 
   "forecast2H": {
-    "lastUpdate": new Date(),
-    "validUntil": new Date(),
+    "lastUpdate": new Date(0),
+    "validUntil": new Date(0),
     "forecast": [],
     "error": true
   },
@@ -449,10 +449,10 @@ function getRainfallCatergory(MmPer5min) {
 }
 
 function getSubindexDangerLvl(value) {
-  if(value <= 50) return 0;
-  if(value <= 100) return 1;
-  if(value <= 150) return 2;
-  if(value <= 200) return 3;
+  if (value <= 50) return 0;
+  if (value <= 100) return 1;
+  if (value <= 150) return 2;
+  if (value <= 200) return 3;
   return 4;
 }
 

@@ -54,5 +54,9 @@ const HELPER = {
     digits = Math.round(10 ** digits + Number.EPSILON);
     digits = digits < 1 ? 1 : digits;
     return Math.round((num + Number.EPSILON) * digits) / digits;
+  },
+
+  "capFirstChar" : (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 };
