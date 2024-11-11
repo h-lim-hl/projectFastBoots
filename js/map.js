@@ -335,11 +335,11 @@ function getWindIcon(name, data) {
           <table style="font-size: .76rem;">
             <tr>
               <td style="text-align: right;">Bearing:</td>
-              <td>${data.windDir ? data.windDir : "NaN "}&deg</td>
+              <td>${data.windDir ? data.windDir : "- "}&deg</td>
             </tr>
             <tr>
               <td style="text-align: right;">Speed:</td>
-              <td>${data.windSpd ? data.windSpd : "NaN "}kn</td>
+              <td>${data.windSpd ? data.windSpd : "- "}kn</td>
             </tr>
           </table>
         </div>
@@ -490,7 +490,9 @@ function getRainfallLayer() {
         "iconSize": iconSize,
         "iconAnchor": [iconSize[0] * 0.5, iconSize[1] * 0.5]
       });
-    }
+    },
+
+    maxClusterRadius: 90
   });
 
   let data = {};
@@ -648,15 +650,24 @@ function refreshPsiLayer() {
   removePsiLayer();
   addPsiLayer();
 }
+// leaflet UVI control
+let uviControl = undefined;
 
+function uviToDangerLvl(uvi) {
+  if(uvi <=2) return 0;
+  if(uvi <=5) return 1;
+  if(uvi <=7) return 2;
+  if(uvi <=10) return 3;
+  return 4;
+}
 
 // =============== leaflet TESTING markers
 document.addEventListener("apiDataReady", () => {
   // addTownLayer();
   // addTemperatureLayer();
   // addWindLayer();
-  // addRainfallLayer();
-  addPsiLayer();
+    addRainfallLayer();
+  // addPsiLayer();
 });
 
 // if(RAIN_VIEWER_API.isReady) {

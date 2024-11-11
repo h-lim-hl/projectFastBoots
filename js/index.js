@@ -14,7 +14,7 @@ const state = {
 
 function updateMapDisplayLayers(){
   if(state.psi) addPsiLayer();
-  else refreshPsiLayer();
+  else removePsiLayer();
   
   if(state.temperature) addTemperatureLayer();
   else removeTemperatureLayer();
