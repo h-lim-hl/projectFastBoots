@@ -13,8 +13,8 @@ const state = {
 };
 
 function updateMapDisplayLayers(){
-  if(state.psi) {}
-  else {}
+  if(state.psi) addPsiLayer();
+  else refreshPsiLayer();
   
   if(state.temperature) addTemperatureLayer();
   else removeTemperatureLayer();
@@ -42,7 +42,11 @@ const FORECAST_2D_BTN = document.querySelector("#forecast2h-btn");
 FORECAST_2D_BTN.addEventListener("click", ()=>{});
 
 const PSI_BTN = document.querySelector("#psi-btn");
-PSI_BTN.addEventListener("click", ()=>{});
+PSI_BTN.addEventListener("click", ()=>{
+  state.psi = true;
+  state.rainfall = state.temperature = state.wind = state.forecast2h = false;
+  updateMapDisplayLayers();
+});
 
 const RAINFALL_BTN = document.querySelector("#rainfall-btn");
 RAINFALL_BTN.addEventListener("click", ()=>{

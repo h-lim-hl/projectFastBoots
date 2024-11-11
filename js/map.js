@@ -42,7 +42,7 @@ const BASE_MAPS = {
 BASE_MAPS.OpenStreetMap.addTo(map);
 
 // Add baselayer control
-let layerControl = L.control.layers(BASE_MAPS,{}).addTo(map);
+let layerControl = L.control.layers(BASE_MAPS, {}).addTo(map);
 layerControl.getContainer().style.zIndex = 2000;
 
 // Map Scale
@@ -466,7 +466,7 @@ function getRainfallLayer() {
                 <b><u>*${cluster.getChildCount()}*</u></b>
               </div>
               <div class="align-middle text-center">
-                ${getRainfallCatergory(totalMmPer5min/cluster.getChildCount())}
+                ${getRainfallCatergory(totalMmPer5min / cluster.getChildCount())}
               </div>
               <div class="align-middle text-center">
                 Rainfall:
@@ -474,7 +474,7 @@ function getRainfallLayer() {
               <div style="margin-bottom: 8px;">
                 <table style="font-size: .76rem;">
                   <tr>
-                    <td>${HELPER.sigFig(totalMmPer5min/cluster.getChildCount(), 1)}</td>
+                    <td>${HELPER.sigFig(totalMmPer5min / cluster.getChildCount(), 1)}</td>
                     <td style="font-size: smaller; text-align:left; vertical-align:bottom;">mm/min</td>
                   </tr>
                 </table>
@@ -537,12 +537,126 @@ function refreshRainfallLayer() {
   addRainfallLayer();
 }
 
+// =============== leaflet PSI Markers
+let psiLayer = undefined;
+
+function getPsiDivIcon(name, data) {
+  const html = `
+    <div>
+      <div class="d-flex flex-column align-items-center" style="width: 90px; border-radius: 6%; font-size: large; background-color: ghostwhite; opacity:0.8">
+        <div class="align-middle">
+          <div style="background-color: white; border-radius: 50%; height: 2.25rem; width: 2.25rem; border-width: 1px; border-color: maroon; border-style: solid; margin-top: 5px;">
+            <div style="display: flex; justify-content: center; align-items: center;">
+              <img src="images/pollution-chimney.svg" style="height: 1.5rem; width: 1.5rem; margin-top: .4rem;">
+              <i class="bi bi-buildings-fill d-none" style="font-size: 1.5rem; color: #B3404A; margin-top: -1.9pt;"></i>
+            </div>
+          </div>
+        </div>
+        <div class="align-middle text-center">
+          <b><u>${HELPER.capFirstChar(name)}</u></b>
+        </div>
+        <div style="margin-bottom: 8px;">
+          <table style="font-size: .76rem;">
+            <tr style="vertical-align: middle; font-size:0.85rem">
+              <td style="text-align: right;"><b>PSI:</b></td>
+              <td><span style="vertical-align: 5%;">${data.psi} </span><i class="bi bi-exclamation-circle-fill psi-warn-icon-setting psi-elevated-color ${data.psiLvl === 1 ? "" : "d-none"}" title="Elevated"></i><i class="bi bi-exclamation-octagon-fill psi-warn-icon-setting psi-unhealthy-color ${data.psiLvl === 2 ? "" : "d-none"}" title="Unhealthy for Sensitive Groups"></i><i class="bi bi-exclamation-diamond-fill psi-warn-icon-setting psi-unhealthy2-color  ${data.psiLvl === 3 ? "" : "d-none"}" title="Unhealthy"></i><i class="bi bi-exclamation-triangle-fill psi-warn-icon-setting psi-hazardous-color ${data.psiLvl === 4 ? "" : "d-none"}" title="Hazardous"></td>
+              <td></td>
+              </tr>
+            <tr>
+              <td style="text-align: right;">O<sub>3</sub>:</td>
+              <td><span style="vertical-align: 0%;">${data.o3} </span><i class="bi bi-exclamation-circle-fill psi-warn-icon-setting psi-elevated-color ${data.o3Lvl === 1 ? "" : "d-none"}" title="Elevated"></i><i class="bi bi-exclamation-octagon-fill psi-warn-icon-setting psi-unhealthy-color ${data.o3Lvl === 2 ? "" : "d-none"}" title="Unhealthy for Sensitive Groups"></i><i class="bi bi-exclamation-diamond-fill psi-warn-icon-setting psi-unhealthy2-color  ${data.o3Lvl === 3 ? "" : "d-none"}" title="Unhealthy"></i><i class="bi bi-exclamation-triangle-fill psi-warn-icon-setting psi-hazardous-color ${data.o3Lvl === 4 ? "" : "d-none"}" title="Hazardous"></td>
+            </tr>
+            <tr>
+              <td style="text-align: right;">PM10:</td>
+              <td><span style="vertical-align: 5%;">${data.pm10} </span><i class="bi bi-exclamation-circle-fill psi-warn-icon-setting psi-elevated-color ${data.pm10Lvl === 1 ? "" : "d-none"}" title="Elevated"></i><i class="bi bi-exclamation-octagon-fill psi-warn-icon-setting psi-unhealthy-color ${data.pm10Lvl === 2 ? "" : "d-none"}" title="Unhealthy for Sensitive Groups"></i><i class="bi bi-exclamation-diamond-fill psi-warn-icon-setting psi-unhealthy2-color  ${data.pm10Lvl === 3 ? "" : "d-none"}" title="Unhealthy"></i><i class="bi bi-exclamation-triangle-fill psi-warn-icon-setting psi-hazardous-color ${data.pm10Lvl === 4 ? "" : "d-none"}" title="Hazardous"></td>
+            </tr>
+            <tr>
+              <td style="text-align: right;">PM2.5:</td>
+              <td><span style="vertical-align: 5%;">${data.pm25} </span><i class="bi bi-exclamation-circle-fill psi-warn-icon-setting psi-elevated-color ${data.psiLvl === 1 ? "" : "d-none"}" title="Elevated"></i><i class="bi bi-exclamation-octagon-fill psi-warn-icon-setting psi-unhealthy-color ${data.pm25Lvl === 2 ? "" : "d-none"}" title="Unhealthy for Sensitive Groups"></i><i class="bi bi-exclamation-diamond-fill psi-warn-icon-setting psi-unhealthy2-color ${data.pm25Lvl === 3 ? "" : "d-none"}" title="Unhealthy"></i><i class="bi bi-exclamation-triangle-fill psi-warn-icon-setting psi-hazardous-color ${data.pm25Lvl === 4 ? "" : "d-none"}" title="Hazardous"></td>
+            </tr>
+            <tr>
+              <td style="text-align: right;">SO<sub>2</sub>:</td>
+              <td><span style="vertical-align: 5%;">${data.so2} </span><i class="bi bi-exclamation-circle-fill psi-warn-icon-setting psi-elevated-color ${data.so2Lvl === 1 ? "" : "d-none"}" title="Elevated"></i><i class="bi bi-exclamation-octagon-fill psi-warn-icon-setting psi-unhealthy-color ${data.so2Lvl === 2 ? "" : "d-none"}" title="Unhealthy for Sensitive Groups"></i><i class="bi bi-exclamation-diamond-fill psi-warn-icon-setting psi-unhealthy2-color  ${data.so2Lvl === 3 ? "" : "d-none"}" title="Unhealthy"></i><i class="bi bi-exclamation-triangle-fill psi-warn-icon-setting psi-hazardous-color ${data.so2Lvl === 4 ? "" : "d-none"}" title="Hazardous"></td>
+            </tr>
+            <tr>
+              <td style="text-align: right;">CO:</td>
+              <td><span style="vertical-align: 5%;">${data.co} </span><i class="bi bi-exclamation-circle-fill psi-warn-icon-setting psi-elevated-color ${data.coLvl === 1 ? "" : "d-none"}" title="Elevated"></i><i class="bi bi-exclamation-octagon-fill psi-warn-icon-setting psi-unhealthy-color ${data.coLvl === 2 ? "" : "d-none"}" title="Unhealthy for Sensitive Groups"></i><i class="bi bi-exclamation-diamond-fill psi-warn-icon-setting psi-unhealthy2-color ${data.coLvl === 3 ? "" : "d-none"}" title="Unhealthy"></i><i class="bi bi-exclamation-triangle-fill psi-warn-icon-setting psi-hazardous-color ${data.coLvl === 4 ? "" : "d-none"}" title="Hazardous"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const iconSize = getDivIconSize(html);
+  return L.divIcon({
+    "className": "",
+    "html": html,
+    "iconSize": iconSize,
+    "iconAnchor": [iconSize[0] * 0.5, iconSize[1] * 0.5]
+  });
+}
+
+function getPsiLayer() {
+  let divPsiLayer = new L.layerGroup();
+  let data = {};
+
+  for (let k of apiData.regions.keys()) {
+    data[`${k}`] = {};
+    data[`${k}`]["psi"] = apiData.psi.data.psi_twenty_four_hourly[`${k}`];
+    data[`${k}`]["psiLvl"] = getSubindexDangerLvl(Number(data[`${k}`].psi));
+
+    data[`${k}`]["co"] = apiData.psi.data.co_sub_index[`${k}`];
+    data[`${k}`]["coLvl"] = getSubindexDangerLvl(Number(data[`${k}`].co));
+
+    data[`${k}`]["o3"] = apiData.psi.data.o3_sub_index[`${k}`];
+    data[`${k}`]["o3Lvl"] = getSubindexDangerLvl(Number(data[`${k}`].o3));
+
+    data[`${k}`]["pm10"] = apiData.psi.data.pm10_sub_index[`${k}`];
+    data[`${k}`]["pm10Lvl"] = getSubindexDangerLvl(Number(data[`${k}`].pm10));
+
+    data[`${k}`]["pm25"] = apiData.psi.data.pm25_sub_index[`${k}`];
+    data[`${k}`]["pm25Lvl"] = getSubindexDangerLvl(Number(data[`${k}`].pm25));
+
+    data[`${k}`]["so2"] = apiData.psi.data.so2_sub_index[`${k}`];
+    data[`${k}`]["so2Lvl"] = getSubindexDangerLvl(Number(data[`${k}`].so2));
+  }
+
+  for (let o of Object.entries(data)) {
+    console.log(o[1]);
+    const icon = getPsiDivIcon(o[0], o[1]);
+    L.marker(apiData.regions.get(o[0]).location, { "icon": icon }).addTo(divPsiLayer);
+  }
+
+  return divPsiLayer;
+}
+
+function addPsiLayer() {
+  if (psiLayer) return;
+  psiLayer = getPsiLayer();
+  psiLayer.addTo(map);
+}
+
+function removePsiLayer() {
+  if (psiLayer) {
+    map.removeLayer(psiLayer);
+    psiLayer = undefined;
+  }
+}
+
+function refreshPsiLayer() {
+  removePsiLayer();
+  addPsiLayer();
+}
+
+
 // =============== leaflet TESTING markers
 document.addEventListener("apiDataReady", () => {
   // addTownLayer();
   // addTemperatureLayer();
   // addWindLayer();
   // addRainfallLayer();
+  addPsiLayer();
 });
 
 // if(RAIN_VIEWER_API.isReady) {
