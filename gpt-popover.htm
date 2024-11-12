@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaflet Marker with Popup</title>
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+  
+  <!-- Bootstrap CSS (for icons) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" />
+  
+  <!-- Bootstrap Icons CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
+  
+  <style>
+    /* Ensure the map has height */
+    #map { height: 500px; }
+    
+    /* Custom icon style (to make the text and icon look nice together) */
+    .custom-marker {
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Center the text and icon */
+      background-color: pink;  /* Pink background for the icon */
+      color: white;  /* White text for better contrast */
+      border-radius: 50%; /* Optional: Makes the icon round */
+      padding: 10px; /* Adds some space around the text */
+    }
+    
+    .custom-marker i {
+      margin-left: 8px; /* Adjust the icon spacing */
+      font-size: 20px;  /* Make the icon a bit larger */
+      color: white;  /* Ensure the icon is visible on the pink background */
+    }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <!-- Bootstrap JS (including Popover, though it's not needed here) -->
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Initialize Leaflet map
+    var map = L.map('map').setView([51.505, -0.09], 13);
+
+    // Add OpenStreetMap tiles to the map
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    // Create a custom divIcon with text and Bootstrap icon
+    var customIcon = L.divIcon({
+      className: 'custom-marker',
+      html: '<span>Click me <i class="bi bi-info-circle"></i></span>',
+      iconSize: [120, 40],  // Adjust size to fit text and icon
+      iconAnchor: [60, 20]  // Anchor the icon in the middle
+    });
+
+    // Create the marker with the custom icon
+    var marker = L.marker([51.505, -0.09], {icon: customIcon}).addTo(map);
+
+    // Attach the click event to open the popup
+    marker.on('click', function() {
+      var popupContent = '<b>More Information</b><br><p>Hello world! This is the detailed information you were looking for.</p>';
+
+      // Unbind any previously bound popup (this ensures that popup can be reopened)
+      marker.unbindPopup();
+
+      // Bind the new popup content and open the popup
+      marker.bindPopup(popupContent).openPopup();
+    });
+  </script>
+
+</body>
+</html>

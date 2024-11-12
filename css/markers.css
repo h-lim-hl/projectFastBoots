@@ -1,20 +1,35 @@
+:root {
+  --psi-elevated-color : darkorange;
+  --psi-unhealthy-color : darkgoldenrod;
+  --psi-unhealthy2-color : firebrick;
+  --psi-hazardous-color : darkred;
+}
+
 .psi-warn-icon-setting {
   vertical-align: 0%;
   font-size: 1rem;
 }
 
-.psi-elevated-color {
-  color: darkorange
+.psi-popover{
+  --bs-popover-max-width: 100px;
+  --bs-popover-header-font-size: 0.8rem;
+  --bs-popover-font-size: 0.76rem;
+  --bs-popover-header-padding-y: 0.225rem;
+  --bs-popover-body-padding-y: 0.225rem;
 }
 
-.psi-unhealthy-color {
-  color:darkgoldenrod
+.psi-popover-elevated {
+  --bs-popover-header-bg: var(--psi-elevated-color);
 }
 
-.psi-unhealthy2-color {
-  color:firebrick
+.psi-popever-unhealthy {
+  --bs-popover-header-bg: var(--psi-unhealthy-color);
 }
 
-.psi-hazardous-color {
-  color: darkred
+.psi-popever-unhealthy2 {
+  --bs-popover-header-bg: var(--psi-unhealthy2-color);
+}
+
+.psi-popever-hazardous {
+  --bs-popover-header-bg: var(--psi-hazardous-color);
 }

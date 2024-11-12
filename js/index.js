@@ -37,7 +37,6 @@ function updateMapDisplayLayers(){
   }
 };
 
-
 const FORECAST_2D_BTN = document.querySelector("#forecast2h-btn");
 FORECAST_2D_BTN.addEventListener("click", ()=>{});
 
@@ -162,6 +161,9 @@ document.addEventListener("rainfallUpdated", ()=>{
 document.addEventListener("psiUpdated", ()=>{
   if(state.psi) refreshPsiLayer();
 });
+
+const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API/Using_the_Geolocation_API
 if("geolocation" in navigator) {
