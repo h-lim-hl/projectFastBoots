@@ -103,6 +103,8 @@ https://medium.com/@Hermanhasawish/how-i-repainted-bootstrap-without-sass-d789f4
  - "Light Showers", // cloud-drizzle
  - "Showers", // cloud-rain
  - "Heavy Showers", //cloud-rain-heavy
- - "Thundery Showers",
- - "Heavy Thundery Showers",
- - "Heavy Thundery Showers with Gusty Winds"
+ - "Thundery Showers", // cloud-lightning-rain
+ - "Heavy Thundery Showers", // cloud-lightning-rain-fill
+ - "Heavy Thundery Showers with Gusty Winds" // cloud-lightning-rain + wind 
+
+ // crosshair

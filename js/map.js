@@ -542,10 +542,30 @@ function refreshRainfallLayer() {
 // =============== leaflet PSI Markers
 let psiLayer = undefined;
 
+function getPsiPopup(psiLvl) {
+  let content = "";
+  switch (psiLvl) {
+    case 1:
+      content = `<b class="psi-elevated-color">Elevated</b>: Sensitive individuals may experience mild discomfort.`;
+      break;
+    case 2:
+      content = `<b class="psi-unhealthy-color">Unhealthy:</b> The young and old may feel unwell.`;
+      break;
+    case 3:
+      content = `<b class="psi-unhealthy2-color">Very Unhealthy:</b> Everyone may experience adverse effects.`;
+      break;
+    case 4:
+      content = `<b class="psi-harzardous-color">Hazardous:</b> Serious health risk for all.`;
+      break;
+    default:
+  }
+  return content;
+}
+
 function getPsiDivIcon(name, data) {
   const html = `
     <div>
-      <div class="d-flex flex-column align-items-center" style="width: 90px; border-radius: 6%; font-size: large; background-color: ghostwhite; opacity:0.8">
+      <div class="d-flex flex-column align-items-center" style="width: 100px; border-radius: 6px; font-size: large; background-color: ghostwhite; opacity:0.8">
         <div class="align-middle">
           <div style="background-color: white; border-radius: 50%; height: 2.25rem; width: 2.25rem; border-width: 1px; border-color: maroon; border-style: solid; margin-top: 5px;">
             <div style="display: flex; justify-content: center; align-items: center;">
@@ -562,27 +582,26 @@ function getPsiDivIcon(name, data) {
             <tr style="vertical-align: middle; font-size:0.85rem">
               <td style="text-align: right;"><b>PSI:</b></td>
               <td><span style="vertical-align: 5%;">${data.psi} </span><i class="bi bi-exclamation-circle-fill psi-warn-icon-setting psi-elevated-color ${data.psiLvl === 1 ? "" : "d-none"}" title="Elevated"></i><i class="bi bi-exclamation-octagon-fill psi-warn-icon-setting psi-unhealthy-color ${data.psiLvl === 2 ? "" : "d-none"}" title="Unhealthy for Sensitive Groups"></i><i class="bi bi-exclamation-diamond-fill psi-warn-icon-setting psi-unhealthy2-color  ${data.psiLvl === 3 ? "" : "d-none"}" title="Unhealthy"></i><i class="bi bi-exclamation-triangle-fill psi-warn-icon-setting psi-hazardous-color ${data.psiLvl === 4 ? "" : "d-none"}" title="Hazardous"></td>
-              <td></td>
               </tr>
             <tr>
               <td style="text-align: right;">O<sub>3</sub>:</td>
-              <td><span style="vertical-align: 0%;">${data.o3} </span><i class="bi bi-exclamation-circle-fill psi-warn-icon-setting psi-elevated-color ${data.o3Lvl === 1 ? "" : "d-none"}" title="Elevated"></i><i class="bi bi-exclamation-octagon-fill psi-warn-icon-setting psi-unhealthy-color ${data.o3Lvl === 2 ? "" : "d-none"}" title="Unhealthy for Sensitive Groups"></i><i class="bi bi-exclamation-diamond-fill psi-warn-icon-setting psi-unhealthy2-color  ${data.o3Lvl === 3 ? "" : "d-none"}" title="Unhealthy"></i><i class="bi bi-exclamation-triangle-fill psi-warn-icon-setting psi-hazardous-color ${data.o3Lvl === 4 ? "" : "d-none"}" title="Hazardous"></td>
+              <td><span style="vertical-align: 0%;">${data.o3}</td>
             </tr>
             <tr>
               <td style="text-align: right;">PM10:</td>
-              <td><span style="vertical-align: 5%;">${data.pm10} </span><i class="bi bi-exclamation-circle-fill psi-warn-icon-setting psi-elevated-color ${data.pm10Lvl === 1 ? "" : "d-none"}" title="Elevated"></i><i class="bi bi-exclamation-octagon-fill psi-warn-icon-setting psi-unhealthy-color ${data.pm10Lvl === 2 ? "" : "d-none"}" title="Unhealthy for Sensitive Groups"></i><i class="bi bi-exclamation-diamond-fill psi-warn-icon-setting psi-unhealthy2-color  ${data.pm10Lvl === 3 ? "" : "d-none"}" title="Unhealthy"></i><i class="bi bi-exclamation-triangle-fill psi-warn-icon-setting psi-hazardous-color ${data.pm10Lvl === 4 ? "" : "d-none"}" title="Hazardous"></td>
+              <td><span style="vertical-align: 5%;">${data.pm10}</td>
             </tr>
             <tr>
               <td style="text-align: right;">PM2.5:</td>
-              <td><span style="vertical-align: 5%;">${data.pm25} </span><i class="bi bi-exclamation-circle-fill psi-warn-icon-setting psi-elevated-color ${data.psiLvl === 1 ? "" : "d-none"}" title="Elevated"></i><i class="bi bi-exclamation-octagon-fill psi-warn-icon-setting psi-unhealthy-color ${data.pm25Lvl === 2 ? "" : "d-none"}" title="Unhealthy for Sensitive Groups"></i><i class="bi bi-exclamation-diamond-fill psi-warn-icon-setting psi-unhealthy2-color ${data.pm25Lvl === 3 ? "" : "d-none"}" title="Unhealthy"></i><i class="bi bi-exclamation-triangle-fill psi-warn-icon-setting psi-hazardous-color ${data.pm25Lvl === 4 ? "" : "d-none"}" title="Hazardous"></td>
+              <td><span style="vertical-align: 5%;">${data.pm25}</td>
             </tr>
             <tr>
               <td style="text-align: right;">SO<sub>2</sub>:</td>
-              <td><span style="vertical-align: 5%;">${data.so2} </span><i class="bi bi-exclamation-circle-fill psi-warn-icon-setting psi-elevated-color ${data.so2Lvl === 1 ? "" : "d-none"}" title="Elevated"></i><i class="bi bi-exclamation-octagon-fill psi-warn-icon-setting psi-unhealthy-color ${data.so2Lvl === 2 ? "" : "d-none"}" title="Unhealthy for Sensitive Groups"></i><i class="bi bi-exclamation-diamond-fill psi-warn-icon-setting psi-unhealthy2-color  ${data.so2Lvl === 3 ? "" : "d-none"}" title="Unhealthy"></i><i class="bi bi-exclamation-triangle-fill psi-warn-icon-setting psi-hazardous-color ${data.so2Lvl === 4 ? "" : "d-none"}" title="Hazardous"></td>
+              <td><span style="vertical-align: 5%;">${data.so2}</td>
             </tr>
             <tr>
               <td style="text-align: right;">CO:</td>
-              <td><span style="vertical-align: 5%;">${data.co} </span><i class="bi bi-exclamation-circle-fill psi-warn-icon-setting psi-elevated-color ${data.coLvl === 1 ? "" : "d-none"}" title="Elevated"></i><i class="bi bi-exclamation-octagon-fill psi-warn-icon-setting psi-unhealthy-color ${data.coLvl === 2 ? "" : "d-none"}" title="Unhealthy for Sensitive Groups"></i><i class="bi bi-exclamation-diamond-fill psi-warn-icon-setting psi-unhealthy2-color ${data.coLvl === 3 ? "" : "d-none"}" title="Unhealthy"></i><i class="bi bi-exclamation-triangle-fill psi-warn-icon-setting psi-hazardous-color ${data.coLvl === 4 ? "" : "d-none"}" title="Hazardous"></td>
+              <td><span style="vertical-align: 5%;">${data.co}</span></td>
             </tr>
           </table>
         </div>
@@ -625,9 +644,23 @@ function getPsiLayer() {
   }
 
   for (let o of Object.entries(data)) {
-    console.log(o[1]);
     const icon = getPsiDivIcon(o[0], o[1]);
-    L.marker(apiData.regions.get(o[0]).location, { "icon": icon }).addTo(divPsiLayer);
+    console.log(icon);
+    let marker = L.marker(apiData.regions.get(o[0]).location,
+      { "icon": icon });
+
+    marker.on("click", () => {
+      const popupContent = getPsiPopup(o[1].psiLvl);
+      const offset = [0, -icon.options.iconSize[1] * 0.45];
+
+      marker.unbindPopup();
+      marker.bindPopup(popupContent, {
+        "offset" : L.point(offset),
+        "maxWidth" : 80
+      }).openPopup();
+    });
+
+    marker.addTo(divPsiLayer);
   }
 
   return divPsiLayer;
@@ -654,10 +687,10 @@ function refreshPsiLayer() {
 let uviControl = undefined;
 
 function uviToDangerLvl(uvi) {
-  if(uvi <=2) return 0;
-  if(uvi <=5) return 1;
-  if(uvi <=7) return 2;
-  if(uvi <=10) return 3;
+  if (uvi <= 2) return 0;
+  if (uvi <= 5) return 1;
+  if (uvi <= 7) return 2;
+  if (uvi <= 10) return 3;
   return 4;
 }
 
@@ -666,8 +699,8 @@ document.addEventListener("apiDataReady", () => {
   // addTownLayer();
   // addTemperatureLayer();
   // addWindLayer();
-    addRainfallLayer();
-  // addPsiLayer();
+  // addRainfallLayer();
+  addPsiLayer();
 });
 
 // if(RAIN_VIEWER_API.isReady) {

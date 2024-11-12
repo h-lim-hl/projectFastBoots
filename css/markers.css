@@ -10,26 +10,18 @@
   font-size: 1rem;
 }
 
-.psi-popover{
-  --bs-popover-max-width: 100px;
-  --bs-popover-header-font-size: 0.8rem;
-  --bs-popover-font-size: 0.76rem;
-  --bs-popover-header-padding-y: 0.225rem;
-  --bs-popover-body-padding-y: 0.225rem;
+.psi-elevated-color {
+  color: var(--psi-elevated-color);
 }
 
-.psi-popover-elevated {
-  --bs-popover-header-bg: var(--psi-elevated-color);
+.psi-unhealthy-color {
+  color: var(--psi-unhealthy-color);
 }
 
-.psi-popever-unhealthy {
-  --bs-popover-header-bg: var(--psi-unhealthy-color);
+.psi-unhealthy2-color {
+  color: var(--psi-unhealthy2-color);
 }
 
-.psi-popever-unhealthy2 {
-  --bs-popover-header-bg: var(--psi-unhealthy2-color);
-}
-
-.psi-popever-hazardous {
-  --bs-popover-header-bg: var(--psi-hazardous-color);
+.psi-hazardous-color {
+  color: var(--psi-hazardous-color);
 }

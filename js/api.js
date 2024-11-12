@@ -345,12 +345,12 @@ const OPEN_DATA_API = {
         const updateFunc = function (fnKey, timeout) {
           let intervalNum =
             setInterval(OPEN_DATA_API.updateApiDataFns.get(fnKey), timeout);
-          apiData.internals.set(fnKey, intervalNum);
+          apiData.intervals.set(fnKey, intervalNum);
           return intervalNum;
         };
 
         const updateRainviewer = function (fnKey, timeout) {
-          apiData.internals.set(fnKey,
+          apiData.intervals.set(fnKey,
             setInterval(getRainViewerApiConfig, timeout))
         };
         const timeNow = new Date().getTime();
@@ -431,7 +431,7 @@ const apiData = {
     "error": true
   },
 
-  "internals": new Map(),
+  "intervals": new Map(),
 
   "last": 0
 }; Object.seal(apiData);
