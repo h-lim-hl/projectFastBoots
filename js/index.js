@@ -22,8 +22,13 @@ function updateMapDisplayLayers(){
   if(state.wind) addWindLayer();
   else removeWindLayer();
 
-  if(state.forecast2h) {}
-  else {}
+  if(state.forecast2h) {
+    addForecast2hLayer();
+    addUviControl();
+  } else {
+    removeForecast2hLayer();
+    removeUviControl();
+  } 
 
   if(state.rainfall) addRainfallLayer();
   else removeRainfallLayer();
@@ -38,10 +43,16 @@ function updateMapDisplayLayers(){
 };
 
 const FORECAST_2D_BTN = document.querySelector("#forecast2h-btn");
-FORECAST_2D_BTN.addEventListener("click", ()=>{});
+FORECAST_2D_BTN.addEventListener("click", ()=>{
+  if(!apiData.init) return;
+  state.forecast2h = true;
+  state.psi = state.temperature = state.wind = state.rainfall = false;
+  updateMapDisplayLayers();
+});
 
 const PSI_BTN = document.querySelector("#psi-btn");
 PSI_BTN.addEventListener("click", ()=>{
+  if(!apiData.init) return;
   state.psi = true;
   state.rainfall = state.temperature = state.wind = state.forecast2h = false;
   updateMapDisplayLayers();
@@ -49,6 +60,7 @@ PSI_BTN.addEventListener("click", ()=>{
 
 const RAINFALL_BTN = document.querySelector("#rainfall-btn");
 RAINFALL_BTN.addEventListener("click", ()=>{
+  if(!apiData.init) return;
   state.rainfall = true;
   state.psi = state.temperature = state.wind = state.forecast2h = false;
   updateMapDisplayLayers();
@@ -56,6 +68,7 @@ RAINFALL_BTN.addEventListener("click", ()=>{
 
 const WIND_BTN = document.querySelector("#wind-btn");
 WIND_BTN.addEventListener("click", ()=>{
+  if(!apiData.init) return;
   state.wind = true;
   state.psi = state.temperature = state.forecast2h = state.rainfall = false;
   updateMapDisplayLayers();
@@ -63,6 +76,7 @@ WIND_BTN.addEventListener("click", ()=>{
 
 const TEMPERATURE_BTN = document.querySelector("#temperature-btn");
 TEMPERATURE_BTN.addEventListener("click", ()=>{
+  if(!apiData.init) return;
   state.temperature = true;
   state.psi = state.wind = state.forecast2h = state.rainfall = false;
   updateMapDisplayLayers();
@@ -70,6 +84,11 @@ TEMPERATURE_BTN.addEventListener("click", ()=>{
 
 const RAINVIEWER_TOGGLE = document.querySelector("#rainviewer-toggle");
 RAINVIEWER_TOGGLE.addEventListener("click", ()=>{
+  if(!rainviewerApiObj){
+    RAINVIEWER_TOGGLE.checked = false;
+    return;
+  } 
+
   if(RAINVIEWER_TOGGLE.checked) {
     state.rainviewer = true;
   }
@@ -162,8 +181,18 @@ document.addEventListener("psiUpdated", ()=>{
   if(state.psi) refreshPsiLayer();
 });
 
-const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
-const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+document.addEventListener("forecast2hUpdated", ()=>{
+  if(state.forecast2h) refreshForecast2hLayer();
+});
+
+document.addEventListener("uviUpdated", ()=>{
+  if(state.forecast2h) refreshUviControl();
+});
+
+document.addEventListener("apiDataReady", ()=>{
+  state.forecast2h = true;
+  updateMapDisplayLayers();
+});
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API/Using_the_Geolocation_API
 if("geolocation" in navigator) {

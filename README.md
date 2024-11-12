@@ -99,12 +99,14 @@ https://medium.com/@Hermanhasawish/how-i-repainted-bootstrap-without-sass-d789f4
  - "Light Rain", // cloud-drizzle-fill
  - "Moderate Rain", // cloud-rain-fill
  - "Heavy Rain", // cloud-rain-heavy-fill
- - "Passing Showers", //
+ - "Passing Showers", // cloud-rain-fill
  - "Light Showers", // cloud-drizzle
  - "Showers", // cloud-rain
  - "Heavy Showers", //cloud-rain-heavy
  - "Thundery Showers", // cloud-lightning-rain
  - "Heavy Thundery Showers", // cloud-lightning-rain-fill
- - "Heavy Thundery Showers with Gusty Winds" // cloud-lightning-rain + wind 
+ - "Heavy Thundery Showers with Gusty Winds" // cloud-lightning-rain-fill
 
  // crosshair
+
+// need to add preloader

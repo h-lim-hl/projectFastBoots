@@ -80,10 +80,7 @@ function removeRainviewerLayer() {
 }
 
 function addRainviewerLayer() {
-  if (rainviewerApiObj === undefined) {
-    console.error(`rainviewerApiObj is undefined!`);
-    return;
-  }
+  if (!rainviewerApiObj) return;
 
   rainviewerLayer = L.tileLayer(
     getRainlayerUrl(), {
@@ -96,9 +93,9 @@ function addRainviewerLayer() {
 
 function addRainviewerControl() {
   if (rainviewerControl) return;
-  rainviewerControl = L.control({ position: 'topleft' });
+  rainviewerControl = L.control({ "position": "topleft" });
   rainviewerControl.onAdd = () => {
-    let legend = L.DomUtil.create('div');
+    let legend = L.DomUtil.create("div");
     legend.innerHTML += getRainviewerLegend(Object.values(colorSchemeToCssClass)[rainviewerOptions.color]);
     return legend;
   };
@@ -645,7 +642,6 @@ function getPsiLayer() {
 
   for (let o of Object.entries(data)) {
     const icon = getPsiDivIcon(o[0], o[1]);
-    console.log(icon);
     let marker = L.marker(apiData.regions.get(o[0]).location,
       { "icon": icon });
 
@@ -683,7 +679,9 @@ function refreshPsiLayer() {
   removePsiLayer();
   addPsiLayer();
 }
-// leaflet UVI control
+
+// =============== leaflet UVI control
+
 let uviControl = undefined;
 
 function uviToDangerLvl(uvi) {
@@ -694,13 +692,277 @@ function uviToDangerLvl(uvi) {
   return 4;
 }
 
+function getUviHtml(uvi) {
+  const dangerClassColors = ["", "psi-elevated-color", "psi-unhealthy-color",
+                             "psi-unhealthy2-color", "psi-hazardous-color"];
+  return `
+  <div
+      style="border-radius: 5px; font-size: small; background-color: ghostwhite; width:76px; height:32px; padding-top: 2px; padding-left: 2px; display:flex; background-clip: padding-box; border: 2px solid rgba(0,0,0,0.2)">
+      <div
+        style="background-color: white; border-radius: 4px; border: 0.5px solid grey; height:24px; width: 36px; margin-left: 0.25pt;">
+        <div style="margin-top:-3pt; margin-left: 1pt;">
+          <i class="bi bi-sun-fill" style=" font-size: 1.2rem; color: goldenrod;"></i>
+          <div style="position:absolute; top: 9pt; left: 12pt; font-size:0.7rem">
+            <b><u>UVI</u></b>
+          </div>
+        </div>
+      </div>
+      <div style="margin-left: 5px; margin-top:2px">
+        <b class="${dangerClassColors[uviToDangerLvl(uvi)]}">${uvi}</b>
+      </div>
+    </div>
+  `;
+}
+
+function addUviControl() {
+  if(uviControl) return;
+  uviControl = L.control({"position":"bottomleft"});
+  uviControl.onAdd = () => {
+    let uvi = L.DomUtil.create("div");
+    uvi.innerHTML += getUviHtml(apiData.uvi.data[0].value);
+    return uvi;
+  };
+
+  uviControl.addTo(map);
+}
+
+function removeUviControl() {
+  if(uviControl) {
+    map.removeControl(uviControl);
+    uviControl = undefined;
+  }
+}
+
+function refreshUviControl() {
+  removeUviControl();
+  addUviControl();
+}
+
+
+
+// =============== leaflet forecast2h control
+let forecast2hLayer = undefined;
+
+function getForecast2hIcon(forecast) {
+  let htmlFragment = "";
+  switch(forecast) {
+    case "Fair":
+    case "Fair (Day)":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin">
+          <i class="bi bi-sun forecast-sun-color"></i>
+        </div>
+      `;
+      break;
+    case "Fair (Night)":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-1">
+          <i class="bi bi-moon-fill forcast-moon-fill-color"></i>
+        </div>
+      `;
+      break;
+    case "Fair and Warm":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin">
+          <i class="bi bi-sun-fill forcast-sun-fill-color"></i>
+        </div>
+    `;
+      break;
+    case "Partly Cloudy":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-4">
+          <<i class="bi bi-cloud forcast-cloud-color"></i>
+        </div>
+    `;
+      break;
+    case "Partly Cloudy (Day)":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-3">
+          <i class="bi bi-cloud-sun forecast-cloud-sun-color"></i>
+        </div>
+      `;
+      break;
+    case "Partly Cloudy (Night)":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-3">
+          <i class="bi bi-cloud-moon forecast-cloud-moon-color"></i>
+        </div>
+    `;
+      break;
+    case "Cloudy":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-4">
+          <i class="bi bi-cloud-fill forecast-cloud-fill-color"></i>
+        </div>
+      `;
+      break;
+    case "Hazy":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-4">
+          <i class="bi bi-cloud-haze-fill forecast-cloud-fill-color"></i>
+        </div>
+      `;
+      break;
+    case "Slightly Hazy":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-4">
+          <i class="bi bi-cloud-haze forecast-cloud-color"></i>
+        </div>
+      `;
+      break;
+    case "Windy":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin">
+          <i class="bi bi-wind forecast-cloud-color"></i>
+        </div>
+      `;
+      break;
+    case "Mist":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-3">
+          <i class="bi bi-cloud-fog forecast-cloud-color"></i>
+        </div>
+      `;
+      break;
+    case "Fog":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-3">
+          <i class="bi bi-cloud-fog-fill forecast-cloud-fill-color"></i>
+        </div>
+      `;
+      break;
+    case "Light Rain":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-4">
+          <i class="bi bi-cloud-drizzle-fill forecast-cloud-fill-color"></i>
+        </div>
+      `;
+      break;
+    case "Moderate Rain":
+    case "Passing Showers":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-4">
+          <i class="bi bi-cloud-rain-fill forecast-cloud-fill-color"></i>
+        </div>
+      `;
+      break;
+    case "Heavy Rain":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-4">
+          <i class="bi bi-cloud-rain-heavy-fill forecast-cloud-fill-color"></i>
+        </div>
+      `;
+      break;
+    case "Light Showers":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-4">
+          <i class="bi bi-cloud-drizzle forecast-cloud-color"></i>
+        </div>
+      `;
+      break;
+    case "Showers":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-4">
+          <i class="bi bi-cloud-rain forecast-cloud-color"></i>
+        </div>
+      `;
+      break;
+    case "Heavy Showers":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-4">
+          <i class="bi bi-cloud-rain-heavy forecast-cloud-color"></i>
+        </div>
+      `;
+      break;
+    case "Thundery Showers":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-4">
+          <i class="bi bi-cloud-lightning-rain forecast-cloud-color"></i>
+        </div>
+      `;
+      break;
+    case "Heavy Thundery Showers":
+    case "Heavy Thundery Showers with Gusty Winds":
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin-4">
+          <i class="bi bi-cloud-lightning-rain-fill forecast-cloud-fill-color"></i>
+        </div>
+      `;
+      break;
+    default:
+      htmlFragment = `
+        <div class="forecast2h-icon forecast2h-margin">
+          <i class="bi bi-exclamation-octagon-fill" style="color: var(--psi-hazardous-color)"></i>
+        </div>
+      `;
+  }
+  return htmlFragment;
+}
+
+function getForcast2hDivIcon(name, data) {
+  const html = `
+  <div>
+    <div class="d-flex flex-column align-items-center map-marker town-size-marker">
+      <div class="forecast2h-icon-frame">
+        ${getForecast2hIcon(data.forecast)}
+      </div>
+      <div class="align-middle text-center">
+        <b><u>${name}</u></b>
+      </div>
+      <div class="align-middle text-center map-marker-fontsize-content map-marker-lastelem">
+        ${data.forecast}
+      </div>
+    </div>
+  </div>
+  `;
+  const iconSize = getDivIconSize(html);
+  return L.divIcon({
+    "className": "",
+    "html": html,
+    "iconSize": iconSize,
+    "iconAnchor": [iconSize[0] * 0.5, iconSize[1] * 0.5]
+  });
+}
+
+function getForecast2hLayer() {
+  let divForecast2hLayer = new L.layerGroup();
+  for(let e of apiData.forecast2H.forecast) {
+    const icon = getForcast2hDivIcon(e.area, {"forecast": e.forecast});
+    const location = apiData.neighbourhoods.get(e.area).location; 
+    if(!location) {
+      console.error(`${e.area} does not have a location!`);
+      continue;
+    }
+    L.marker(location, {"icon":icon}).addTo(divForecast2hLayer);
+  }
+  return divForecast2hLayer;
+}
+
+function addForecast2hLayer() {
+  if(forecast2hLayer) return;
+  forecast2hLayer = getForecast2hLayer();
+  map.addLayer(forecast2hLayer);
+}
+
+function removeForecast2hLayer() {
+  if(forecast2hLayer) {
+    map.removeLayer(forecast2hLayer);
+    forecast2hLayer = undefined;
+  }
+}
+
+function refreshForecast2hLayer() {
+  removeForecast2hLayer();
+  addForecast2hLayer();
+}
 // =============== leaflet TESTING markers
 document.addEventListener("apiDataReady", () => {
   // addTownLayer();
   // addTemperatureLayer();
   // addWindLayer();
   // addRainfallLayer();
-  addPsiLayer();
+  // addPsiLayer();
+  // addForecast2hLayer();
 });
 
 // if(RAIN_VIEWER_API.isReady) {

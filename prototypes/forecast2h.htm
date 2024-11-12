@@ -9,43 +9,169 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="css/index.css">
   <title>Document</title>
+  <style>
+    .map-marker {
+      border-radius: 5px;
+      opacity: 0.8;
+    }
+
+    .map-marker-lastelem {
+      margin-bottom: 8px;
+    }
+
+    .map-marker-fontsize-content {
+      font-size: .76rem;
+    }
+
+    .town-size-marker {
+      width: 88px;
+      font-size: small;
+      background-color: ghostwhite;
+    }
+
+    .forecast2h-icon-frame {
+      background-color: rgb(220, 235, 255);
+      border-radius: 50%;
+      height: 24px;
+      width: 24px;
+      border-width: 1px;
+      border-color: rgb(150, 190, 215);
+      border-style: solid;
+      margin-top: 5px;
+    }
+
+    .forecast2h-icon {
+      font-size: 1.075rem;
+    }
+
+    .forecast2h-margin {
+      margin-left: 1.8pt;
+      margin-top: -1.8pt;
+    }
+
+    .forecast2h-margin-1 {
+      margin-left: 2.5pt;
+      margin-top: -1.8pt;
+    }
+
+    .forecast2h-margin-2 {
+      margin-left: 2.5pt;
+      margin-top: -2.5pt;
+    }
+
+    .forecast2h-margin-3 {
+      margin-left: 1.8pt;
+      margin-top: -2.8pt;
+    }
+
+    .forecast2h-margin-4 {
+      margin-left: 1.8pt;
+      margin-top: -2.5pt;
+    }
+
+    .forecast-sun-color {
+      color: rgb(200, 115, 0);
+    }
+
+    .forcast-sun-fill-color {
+      color: rgb(255, 166, 0)
+    }
+
+    .forcast-moon-fill-color {
+      color: rgb(128, 0, 128)
+    }
+
+    .forecast-cloud-color {
+      color: rgb(98, 110, 116);
+    }
+
+    .forecast-cloud-fill-color {
+      color: rgb(130, 140, 145);
+    }
+
+    .forecast-cloud-sun-color {
+      color: rgb(115, 110, 95);
+    }
+
+    .forecast-cloud-moon-color {
+      color: rgb(100, 95, 115);
+    }
+  </style>
 </head>
 
 <body style="background-color: black;">
   <div>
-    <div class="d-flex flex-column align-items-center"
-      style="width: 88px; border-radius: 5%; font-size: small; background-color: ghostwhite; opacity:0.8">
-      <div
-        style="background-color: rgb(220, 235, 255); border-radius: 50%; height: 24px; width: 24px; border-width: 1px; border-color: rgb(150, 190, 215); border-style: solid; margin-top: 5px;">
-        <div style="margin-left: 1.8pt; margin-top: -2.5pt;"> <!-- margin-top needs to be -2.5pt for some -->
-          <i class="bi bi-sun d-none" style="font-size: 1.075rem; color: #c87300"></i>
-          <i class="bi bi-sun-fill d-none" style="font-size: 1.075rem; color: #ffa500"></i>
-          <i class="bi bi-moon-fill d-none" style="font-size: 1.075rem; color: #800080"></i>
-          <i class="bi bi-cloud d-none" style="font-size: 1.075rem; color: #828c91"></i>
-          <i class="bi bi-cloud-sun d-none" style="font-size: 1.075rem; color: #736e5f"></i> <!-- margin-top needs to be -2.5pt -->
-          <i class="bi bi-cloud-moon d-none" style="font-size: 1.075rem; color: #645f73"></i> <!-- margin-top needs to be -2.5pt -->
-          <i class="bi bi-cloud-fill d-none" style="font-size: 1.075rem; color: #aab9c3"></i>
-          <i class="bi bi-cloud-haze-fill d-none" style="font-size: 1.075rem; color: #aab9c3"></i>
-          <i class="bi bi-wind d-none" style="font-size: 1.075rem; color: #737e83"></i>
-          <i class="bi bi-cloud-fog d-none" style="font-size: 1.075rem; color: #736e5f"></i> <!-- margin-top needs to be -2.5pt -->
-          <i class="bi bi-cloud-fog-fill d-none" style="font-size: 1.075rem; color: #828c91"></i> <!-- margin-top needs to be -2.5pt -->
-          <i class="bi bi-cloud-drizzle-fill d-none" style="font-size: 1.075rem; color: #828c91"></i>
-          <i class="bi bi-cloud-rain-fill d-none" style="font-size: 1.075rem; color: #828c91"></i>
-          <i class="bi bi-cloud-rain-heavy-fill d-none"
-            style="font-size: 1.075rem; color: #828c91"></i>
-          <!-- <i class="bi bi-cloud-rain-heavy-fill" style="font-size: 1.075rem; margin-left: 2pt; color: rgb(130, 140, 145)"></i> -->
+    <div class="d-flex flex-column align-items-center map-marker town-size-marker">
+      <div class="forecast2h-icon-frame">
+        <div class="forecast2h-icon forecast2h-margin d-none">
+          <i class="bi bi-sun forecast-sun-color"></i>
         </div>
-        <div class="d-none" style="position:absolute; left: 65%; top: -1.5pt;">
-          <i class="bi bi-cloud-rain-heavy-fill"
-            style="font-size: 1.075rem; color: #828c91"></i>
-          <!-- <i class="bi bi-cloud-rain-heavy-fill" style="font-size: 1.075rem; margin-left: 2pt; color: rgb(130, 140, 145)"></i> -->
+        <div class="forecast2h-icon forecast2h-margin d-none">
+          <i class="bi bi-sun-fill forcast-sun-fill-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-1 d-none">
+          <i class="bi bi-moon-fill forcast-moon-fill-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-4 d-none">
+          <i class="bi bi-cloud forcast-cloud-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-3 d-none">
+          <i class="bi bi-cloud-sun forecast-cloud-sun-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-3 d-none">
+          <i class="bi bi-cloud-moon forecast-cloud-moon-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-4 d-none">
+          <i class="bi bi-cloud-fill forecast-cloud-fill-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-4 d-none">
+          <i class="bi bi-cloud-haze-fill forecast-cloud-fill-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin d-none">
+          <i class="bi bi-wind forecast-cloud-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-3 d-none">
+          <i class="bi bi-cloud-fog forecast-cloud-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-3 d-none">
+          <i class="bi bi-cloud-fog-fill forecast-cloud-fill-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-4 d-none">
+          <i class="bi bi-cloud-drizzle-fill forecast-cloud-fill-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-4 d-none">
+          <i class="bi bi-cloud-rain-fill forecast-cloud-fill-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-4 d-none">
+          <i class="bi bi-cloud-rain-heavy-fill forecast-cloud-fill-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-4 d-none">
+          <i class="bi bi-cloud-drizzle forecast-cloud-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-4 d-none">
+          <i class="bi bi-cloud-rain forecast-cloud-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-4 d-none">
+          <i class="bi bi-cloud-rain-heavy forecast-cloud-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-4 d-none">
+          <i class="bi bi-cloud-lightning-rain forecast-cloud-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-4 d-none">
+          <i class="bi bi-cloud-lightning-rain-fill forecast-cloud-fill-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin-4 d-none">
+          <i class="bi bi-cloud-haze forecast-cloud-color"></i>
+        </div>
+        <div class="forecast2h-icon forecast2h-margin">
+          <i class="bi bi-exclamation-octagon-fill" style="color: var(--psi-hazardous-color)"></i>
         </div>
       </div>
 
-      <div class="align-middle" style="text-align: center">
+      <div class="align-middle text-align-center">
         <b><u>Ang Mo Kio</u></b>
       </div>
-      <div class="align-middle" style="text-align: center; font-size: .76rem; margin-bottom: 8px;">
+      <div class="align-middle text-align-center map-marker-fontsize-content map-marker-lastelem">
         Showers
       </div>
     </div>

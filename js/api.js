@@ -432,6 +432,8 @@ const apiData = {
   },
 
   "intervals": new Map(),
+  
+  "init" : false,
 
   "last": 0
 }; Object.seal(apiData);
@@ -456,15 +458,9 @@ function getSubindexDangerLvl(value) {
   return 4;
 }
 
-// TO COMPLETE
-function getBootstrapIconFromForecast(forecast) {
-  const forecastIconMap = new Map([
-    ["Fair", "bi-sun"],
-    ["Fair (Day)", "bi-sun"],
-    ["Fair (Night)", "bi-moon"],
-    []
-  ]);
-}
+document.addEventListener("apiDataReady", ()=>{
+  apiData.init = true;
+});
 
 /*
 //  =================== Local Database Logic ==========================
