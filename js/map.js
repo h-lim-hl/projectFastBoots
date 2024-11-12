@@ -74,14 +74,14 @@ let rainviewerControl = undefined;
 // let rainviewerColorScheme = Object.values(colorSchemeToCssClass)[1];
 
 function removeRainviewerLayer() {
-  if (rainviewerLayer === undefined) return;
-  map.removeLayer(rainviewerLayer);
-  rainviewerLayer = undefined;
+  if (rainviewerLayer) {
+    map.removeLayer(rainviewerLayer);
+    rainviewerLayer = undefined;
+  }
 }
 
 function addRainviewerLayer() {
-  if (!rainviewerApiObj) return;
-
+  if (rainfallLayer || !rainviewerApiObj) return;
   rainviewerLayer = L.tileLayer(
     getRainlayerUrl(), {
     "opacity": rainviewerOptions.opacity,
@@ -651,8 +651,8 @@ function getPsiLayer() {
 
       marker.unbindPopup();
       marker.bindPopup(popupContent, {
-        "offset" : L.point(offset),
-        "maxWidth" : 80
+        "offset": L.point(offset),
+        "maxWidth": 80
       }).openPopup();
     });
 
@@ -694,7 +694,7 @@ function uviToDangerLvl(uvi) {
 
 function getUviHtml(uvi) {
   const dangerClassColors = ["", "psi-elevated-color", "psi-unhealthy-color",
-                             "psi-unhealthy2-color", "psi-hazardous-color"];
+    "psi-unhealthy2-color", "psi-hazardous-color"];
   return `
   <div
       style="border-radius: 5px; font-size: small; background-color: ghostwhite; width:76px; height:32px; padding-top: 2px; padding-left: 2px; display:flex; background-clip: padding-box; border: 2px solid rgba(0,0,0,0.2)">
@@ -715,8 +715,8 @@ function getUviHtml(uvi) {
 }
 
 function addUviControl() {
-  if(uviControl) return;
-  uviControl = L.control({"position":"bottomleft"});
+  if (uviControl) return;
+  uviControl = L.control({ "position": "bottomleft" });
   uviControl.onAdd = () => {
     let uvi = L.DomUtil.create("div");
     uvi.innerHTML += getUviHtml(apiData.uvi.data[0].value);
@@ -727,7 +727,7 @@ function addUviControl() {
 }
 
 function removeUviControl() {
-  if(uviControl) {
+  if (uviControl) {
     map.removeControl(uviControl);
     uviControl = undefined;
   }
@@ -745,7 +745,7 @@ let forecast2hLayer = undefined;
 
 function getForecast2hIcon(forecast) {
   let htmlFragment = "";
-  switch(forecast) {
+  switch (forecast) {
     case "Fair":
     case "Fair (Day)":
       htmlFragment = `
@@ -926,26 +926,26 @@ function getForcast2hDivIcon(name, data) {
 
 function getForecast2hLayer() {
   let divForecast2hLayer = new L.layerGroup();
-  for(let e of apiData.forecast2H.forecast) {
-    const icon = getForcast2hDivIcon(e.area, {"forecast": e.forecast});
-    const location = apiData.neighbourhoods.get(e.area).location; 
-    if(!location) {
+  for (let e of apiData.forecast2H.forecast) {
+    const icon = getForcast2hDivIcon(e.area, { "forecast": e.forecast });
+    const location = apiData.neighbourhoods.get(e.area).location;
+    if (!location) {
       console.error(`${e.area} does not have a location!`);
       continue;
     }
-    L.marker(location, {"icon":icon}).addTo(divForecast2hLayer);
+    L.marker(location, { "icon": icon }).addTo(divForecast2hLayer);
   }
   return divForecast2hLayer;
 }
 
 function addForecast2hLayer() {
-  if(forecast2hLayer) return;
+  if (forecast2hLayer) return;
   forecast2hLayer = getForecast2hLayer();
   map.addLayer(forecast2hLayer);
 }
 
 function removeForecast2hLayer() {
-  if(forecast2hLayer) {
+  if (forecast2hLayer) {
     map.removeLayer(forecast2hLayer);
     forecast2hLayer = undefined;
   }
