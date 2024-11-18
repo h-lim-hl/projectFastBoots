@@ -81,7 +81,7 @@ function removeRainviewerLayer() {
 }
 
 function addRainviewerLayer() {
-  if (rainfallLayer || !rainviewerApiObj) return;
+  if (rainviewerLayer || !rainviewerApiObj) return;
   rainviewerLayer = L.tileLayer(
     getRainlayerUrl(), {
     "opacity": rainviewerOptions.opacity,
